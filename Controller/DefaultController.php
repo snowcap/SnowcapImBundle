@@ -31,12 +31,4 @@ class DefaultController extends Controller
             return new Response($im->getCacheContent($format,$path), 200, array('Content-Type' => $contentType));
         }
     }
-
-    /**
-     * @Template()
-     */
-    public function testAction()
-    {
-        return array();
-    }
 }
