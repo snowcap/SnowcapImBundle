@@ -18,7 +18,7 @@ class DefaultController extends Controller
         /** @var $im \Snowcap\ImBundle\Manager */
         $im = $this->get("snowcap_im.manager");
 
-        $im->convert($format, $path, array("resize" => "125x"));
+        $im->convert($format, $path);
 
         if(!$im->cacheExists($format,$path)) {
             throw new \Exception(sprintf("Caching of image failed for %s in %s format", $path, $format));
