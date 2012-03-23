@@ -15,6 +15,25 @@ class ImExtension extends \Twig_Extension
         );
     }
 
+    public function getFilters()
+    {
+        return array(
+            'imresize' => new \Twig_Filter_Method($this, 'imResize', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+        );
+    }
+
+    public function getFunctions()
+    {
+        return array(
+            'imresize' => new \Twig_Function_Method($this, 'imResize', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+        );
+    }
+
+    public function imResize($path, $format)
+    {
+        return "/cache/im/" . $format . "/" . trim($path);
+    }
+
     public function getName()
     {
         return 'snowcap_im';
