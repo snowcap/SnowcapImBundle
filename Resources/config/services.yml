@@ -1,0 +1,16 @@
+parameters:
+  binary_path: ~
+  formats: ~
+
+services:
+  snowcap_im.wrapper:
+    class: Snowcap\ImBundle\Wrapper
+    arguments: [%binary_path%]
+  snowcap_im.manager:
+    class: Snowcap\ImBundle\Manager
+    arguments: [@snowcap_im.wrapper, @kernel, %formats%]
+
+  snowcap_im.twig:
+    class: Snowcap\ImBundle\Twig\Extension\ImExtension
+    tags:
+      -  { name: twig.extension }
