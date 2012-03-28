@@ -14,3 +14,9 @@ services:
     class: Snowcap\ImBundle\Twig\Extension\ImExtension
     tags:
       -  { name: twig.extension }
+
+  snowcap_im.mogrify_subscriber:
+      class: Snowcap\ImBundle\Listener\MogrifySubscriber
+      arguments: [%kernel.root_dir%,@snowcap_im.manager]
+      tags:
+          - { name: doctrine.event_subscriber}

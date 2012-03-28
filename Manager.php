@@ -94,6 +94,10 @@ class Manager
      */
     private function convertFormat($format)
     {
+        if(is_array($format)) {
+            // sounds like the format is already done, let's keep it as it is
+            return $format;
+        }
         if(array_key_exists($format,$this->formats)) {
             // it's a format defined in config, let's use all defined parameters
             return $this->formats[$format];
@@ -113,7 +117,7 @@ class Manager
      */
     private function checkImage($path)
     {
-        if(!file_exists($this->web_path . $path)) {
+        if(!file_exists($this->web_path . $path) && !file_exists($path)) {
             throw new \Exception(sprintf("Unable to find the image \"%s\" to cache",$path));
         }
     }

@@ -23,11 +23,15 @@ class Wrapper
 
     public function run($command, $inputfile, $attributes = array(), $outputfile = "")
     {
-        $this->checkDirectory($outputfile);
+        if($outputfile !== "") {
+            $this->checkDirectory($outputfile);
+            $commandString = $this->binary_path . $command . " " . $inputfile . " " . $this->prepareAttributes($attributes) . " " . $outputfile;
+        } else {
+            $commandString = $this->binary_path . $command . " " . $this->prepareAttributes($attributes). " " . $inputfile;
+        }
 
-        //echo $this->binary_path . $command . " " . $inputfile . " " . $this->prepareAttributes($attributes) . " " . $outputfile; die;
 
-        $process = new Process($this->binary_path . $command . " " . $inputfile . " " . $this->prepareAttributes($attributes) . " " . $outputfile);
+        $process = new Process($commandString);
         $process->run();
 
         if (!$process->isSuccessful()) {
