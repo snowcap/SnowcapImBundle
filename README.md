@@ -50,6 +50,30 @@ $im->convert($format, $path);
 $im->mogrify($format, $path);
 </pre>
 
+### In entities
+
+If you need to alter an uploaded image, you can add annotations on the file public property from your entity
+
+<pre>
+// ...
+use Snowcap\ImBundle\Doctrine\Mapping as SnowcapIm;
+// ...
+
+    /**
+     *
+     * @Assert\File(maxSize="6000000")
+     * @SnowcapIm\Mogrify(params={"thumbnail"="100x100>"})
+     */
+    public $file;
+</pre>
+
+When the form is submitted, the file will then be "thumbnailed" to 100x100 if bigger. You can then use the $file->move() method like usual.
+
+The <code>params</code> attribute can contain
+
+* an array of ImageMagick key/values (like the example above)
+* a format predefined in config
+
 ## Installation
 
 ### Requirements
