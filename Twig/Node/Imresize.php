@@ -6,8 +6,6 @@ use Twig_Node;
 use Twig_NodeInterface;
 use Twig_Compiler;
 
-use Symfony\Component\DomCrawler\Crawler;
-
 /**
  * Represents a img tag node
  *
@@ -33,29 +31,9 @@ class Imresize extends Twig_Node
             ->addDebugInfo($this)
             ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
-            ->write("echo preg_replace_callback('|<img[^>]+>|', '\\Snowcap\\ImBundle\\Twig\\Node\\Imresize::convert', ob_get_clean());\n")
+            ->write("echo \$this->env->getExtension('snowcap_im')->convert(ob_get_clean());\n")
         ;
     }
 
-    /**
-     * Called by the compile method for each <img> tag found
-     *
-     * @static
-     * @param $imgTag array of matches
-     * @return string
-     */
-    public static function convert($imgTag)
-    {
-        $crawler = new Crawler();
-        $crawler->addContent($imgTag[0]);
-        $tag = $crawler->filter("img");
 
-        $src = $tag->attr("src");
-        $width = $tag->attr("width");
-        $height = $tag->attr("height");
-
-        $format = $width . "x" . $height;
-
-        return str_replace($src,"/cache/im/" . $format . "/" . trim($src), $imgTag[0]);
-    }
 }
