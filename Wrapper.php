@@ -30,7 +30,6 @@ class Wrapper
             $commandString = $this->binary_path . $command . " " . $this->prepareAttributes($attributes). " " . $inputfile;
         }
 
-
         $process = new Process($commandString);
         $process->run();
 
@@ -45,9 +44,13 @@ class Wrapper
     {
         $result = "";
         foreach($attributes as $key => $value) {
-            $result .= " -" . $key;
-            if($value != "") {
-                $result .= " \"" . $value . "\"";
+            if($key === null || $key === "") {
+                $result .= " " . $value;
+            } else {
+                $result .= " -" . $key;
+                if($value != "") {
+                    $result .= " \"" . $value . "\"";
+                }
             }
         }
         return $result;
