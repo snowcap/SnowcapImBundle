@@ -9,7 +9,7 @@ use Snowcap\ImBundle\Manager as ImManager;
 
 class MogrifySubscriber implements EventSubscriber
 {
-    private $config;
+    private $config = array();
 
     /**
      * @var string
