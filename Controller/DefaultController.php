@@ -18,7 +18,17 @@ class DefaultController extends Controller
         /** @var $im \Snowcap\ImBundle\Manager */
         $im = $this->get("snowcap_im.manager");
 
-        $im->convert($format, $path);
+        if(strpos($path,"http://") === 0 || strpos($path,"https://")) {
+            $new_path = str_replace("http://",$this->get("kernel")->getRootDir() . '/../web/cache/im/' . $format . '/http/',$path);
+            $new_path = str_replace("https://",$this->get("kernel")->getRootDir() . '/../web/cache/im/' . $format . '/https/',$new_path);
+            $file = file_get_contents($path);
+            @mkdir(dirname($new_path),0755,true);
+            file_put_contents($new_path,$file);
+            $im->mogrify($format, $new_path);
+            $path = str_replace('http://','http/',$path);
+        } else {
+            $im->convert($format, $path);
+        }
 
         if(!$im->cacheExists($format,$path)) {
             throw new \Exception(sprintf("Caching of image failed for %s in %s format", $path, $format));

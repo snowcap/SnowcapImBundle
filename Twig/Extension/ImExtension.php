@@ -74,8 +74,7 @@ class ImExtension extends \Twig_Extension
     public function imResize($path, $format)
     {
         if(strpos($path,"http://") === 0 || strpos($path,"https://") === 0) {
-            // do not cache outside calls
-            return $path;
+            $path = str_replace("://","/",$path);
         }
 
         if(strpos($path,"/") === 0) {
