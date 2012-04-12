@@ -50,17 +50,21 @@ class ImExtension extends \Twig_Extension
         $crawler->addContent($imgTag);
         $tag = $crawler->filter("img");
 
-        $src = $tag->attr("src");
-        $width = $tag->attr("width");
-        $height = $tag->attr("height");
+        try {
+            $src = $tag->attr("src");
+            $width = $tag->attr("width");
+            $height = $tag->attr("height");
 
-        if($width == null && $height == null) {
+            if($width == null && $height == null) {
+                return $imgTag;
+            }
+
+            $format = $width . "x" . $height;
+
+            return preg_replace("| src=[\"']" . $src . "[\"']|"," src=\"" . $this->imResize($src, $format) . "\"", $imgTag);
+        } catch(\Exception $e) {
             return $imgTag;
         }
-
-        $format = $width . "x" . $height;
-
-        return preg_replace("| src=[\"']" . $src . "[\"']|"," src=\"" . $this->imResize($src, $format) . "\"", $imgTag);
     }
 
     /**
