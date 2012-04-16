@@ -10,21 +10,29 @@ use Snowcap\ImBundle\Wrapper;
  */
 class Manager
 {
+    const DEFAULT_IM_PATH = 'cache/im/';
 
     /**
      * @var Wrapper
      */
     private $wrapper;
 
-    /**
-     * @var array
-     */
-    private $formats;
 
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
      */
     private $kernel;
+
+    /**
+     * @var array
+     */
+    private $formats;
+
+    private $web_path;
+
+    private $im_path;
+
+    private $cache_path;
 
     public function __construct(Wrapper $wrapper, Kernel $kernel, $formats = array())
     {
@@ -32,14 +40,21 @@ class Manager
         $this->kernel = $kernel;
         $this->formats = $formats;
         $this->web_path = $this->kernel->getRootDir() . "/../web/";
-        $this->cache_path = $this->web_path . "cache/im/";
+        $this->im_path = self::DEFAULT_IM_PATH;
+        $this->cache_path = $this->web_path . $this->im_path;
+    }
+
+    public function setCachePath($path)
+    {
+        $this->im_path = $path;
+        $this->cache_path = $this->web_path . $this->im_path;
     }
 
     /**
      * To know if a cache exist for a image in a format
      *
-     * @param $format
-     * @param $path
+     * @param string $format
+     * @param string $path
      * @return bool
      */
     public function cacheExists($format, $path)
@@ -50,13 +65,25 @@ class Manager
     /**
      * To get a cached image content
      *
-     * @param $format
-     * @param $path
+     * @param string $format
+     * @param string $path
      * @return string
      */
     public function getCacheContent($format, $path)
     {
         return file_get_contents($this->cache_path . $format . '/' . $path);
+    }
+
+    /**
+     * To get the web path for a format
+     *
+     * @param $format
+     * @param $path
+     * @return string
+     */
+    public function getUrl($format, $path)
+    {
+        return $this->im_path . $format . '/' . $path;
     }
 
     /**
@@ -75,8 +102,8 @@ class Manager
     /**
      * Shortcut to run a "mogrify" command => modifies the image source
      *
-     * @param $format
-     * @param $inputfile
+     * @param string $format
+     * @param string $inputfile
      * @return string
      */
     public function mogrify($format, $file)
@@ -88,7 +115,7 @@ class Manager
     /**
      * Returns the attributes for converting the image regarding a specific format
      *
-     * @param $format
+     * @param string $format
      * @return array
      * @throws \Exception
      */
@@ -112,7 +139,7 @@ class Manager
     /**
      * Validates that an image exists
      *
-     * @param $path
+     * @param string $path
      * @throws \Exception
      */
     private function checkImage($path)

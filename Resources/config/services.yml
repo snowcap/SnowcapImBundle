@@ -1,23 +1,29 @@
 parameters:
-  binary_path: ~
-  formats: ~
+    binary_path: ~
+    formats: ~
 
 services:
-  snowcap_im.wrapper:
-    class: Snowcap\ImBundle\Wrapper
-    arguments: [%binary_path%]
-  snowcap_im.manager:
-    class: Snowcap\ImBundle\Manager
-    arguments: [@snowcap_im.wrapper, @kernel, %formats%]
+    snowcap_im.wrapper:
+        class: Snowcap\ImBundle\Wrapper
+        arguments: [%binary_path%]
+    snowcap_im.manager:
+        class: Snowcap\ImBundle\Manager
+        arguments: [@snowcap_im.wrapper, @kernel, %formats%]
 
-  snowcap_im.twig:
-    class: Snowcap\ImBundle\Twig\Extension\ImExtension
-    arguments: [@service_container]
-    tags:
-      -  { name: twig.extension }
+    snowcap_im.twig:
+        class: Snowcap\ImBundle\Twig\Extension\ImExtension
+        arguments: [@service_container]
+        tags:
+            -  { name: twig.extension }
 
-  snowcap_im.mogrify_subscriber:
-      class: Snowcap\ImBundle\Listener\MogrifySubscriber
-      arguments: [%kernel.root_dir%,@snowcap_im.manager]
-      tags:
-          - { name: doctrine.event_subscriber}
+    snowcap_im.mogrify_subscriber:
+        class: Snowcap\ImBundle\Listener\MogrifySubscriber
+        arguments: [%kernel.root_dir%,@snowcap_im.manager]
+        tags:
+            - { name: doctrine.event_subscriber}
+
+    snowcap_im.form_extension:
+        class: Snowcap\ImBundle\Form\Extension\ImageTypeExtension
+        arguments: [@snowcap_im.manager]
+        tags:
+            -  { name: form.type_extension, alias: snowcap_core_image }
