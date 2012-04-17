@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Util\PropertyPath;
+
 use Snowcap\ImBundle\Manager;
 
 class ImageTypeExtension extends AbstractTypeExtension
@@ -58,20 +60,9 @@ class ImageTypeExtension extends AbstractTypeExtension
     public function buildView(FormView $view, FormInterface $form)
     {
         $format = $form->getAttribute('format');
-        $web_path = $form->getAttribute('web_path');
-        if ($format !== null && $web_path !== null) {
-            $vars = $view->getParent()->getVars();
-            /** @var $image \Pdz\SiteBundle\Entity\Image */
-            $image = $vars['value'];
-            $webPathGetter = 'get' . ucfirst($web_path);
-            $webPathSetter = 'set' . ucfirst($web_path);
-
-            $path = call_user_func(array($image, $webPathGetter));
-            $resizedPath = $this->imManager->getUrl($format, $path);
-
-            call_user_func(array($image, $webPathSetter), $resizedPath);
+        $imageSrc = $view->get('image_src');
+        if ($imageSrc !== null && $format !== null) {
+            $view->set('image_src', $this->imManager->getUrl($format, $imageSrc));
         }
     }
-
-
 }
