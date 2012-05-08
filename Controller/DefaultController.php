@@ -18,12 +18,24 @@ class DefaultController extends Controller
         /** @var $im \Snowcap\ImBundle\Manager */
         $im = $this->get("snowcap_im.manager");
 
-        if(strpos($path,"http/") === 0) {
+        if(strpos($path,"http/") === 0 || strpos($path,"https/") === 0) {
+            $protocol = substr($path,0,strpos($path,"/"));
             if(!$im->cacheExists($format,$path)) {
-                $new_path = str_replace("http/",$this->get("kernel")->getRootDir() . '/../web/cache/im/' . $format . '/http/',$path);
-                $file = file_get_contents( str_replace('http/','http://',$path));
+                $new_path = str_replace($protocol . "/",$this->get("kernel")->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/',$path);
+
                 @mkdir(dirname($new_path),0755,true);
-                file_put_contents($new_path,$file);
+
+                $fp = fopen($new_path, 'w');
+
+                $ch = curl_init(str_replace($protocol . '/', $protocol . '://',$path));
+                curl_setopt($ch, CURLOPT_FILE, $fp);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+
+                curl_exec($ch);
+                curl_close($ch);
+                fclose($fp);
+
                 $im->mogrify($format, $new_path);
             }
         } else {
