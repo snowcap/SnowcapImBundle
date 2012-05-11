@@ -99,9 +99,11 @@ class MogrifySubscriber implements EventSubscriber
     private function mogrify($entity, $file)
     {
         $propertyName = $file['property']->name;
-        $uploadedFile = $entity->$propertyName;
-        if (null !== $uploadedFile) {
-            $this->imManager->mogrify($file['params'], $uploadedFile->getPathName());
+        if(isset($entity->$propertyName)) {
+            $uploadedFile = $entity->$propertyName;
+            if (null !== $uploadedFile) {
+                $this->imManager->mogrify($file['params'], $uploadedFile->getPathName());
+            }
         }
     }
 
