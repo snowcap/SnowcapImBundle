@@ -8,3 +8,5 @@ It's a general wrapper to access imagemagick command line functions, instead of 
 It allows you to use all the convert/mogrify power, from your controller or your views
 
 See the [Documentation and examples](http://snowcap.github.com/SnowcapImBundle)
+
+[![Build Status](https://secure.travis-ci.org/snowcap/SnowcapImBundle.png?branch=master)](http://travis-ci.org/snowcap/SnowcapImBundle)
