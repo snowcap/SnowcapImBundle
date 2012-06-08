@@ -1,4 +1,14 @@
 <?php
+
+/*
+ * This file is part of the Snowcap ImBundle package.
+ *
+ * (c) Snowcap <shoot@snowcap.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Snowcap\ImBundle\Twig\Extension;
 
 use Snowcap\ImBundle\Twig\TokenParser\Imresize as Twig_TokenParser_Imresize;
