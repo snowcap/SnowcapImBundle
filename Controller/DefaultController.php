@@ -3,31 +3,42 @@
 namespace Snowcap\ImBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 use Symfony\Component\HttpFoundation\Response;
 
+use Snowcap\ImBundle\Exception\RuntimeException;
+
+/**
+ * Controls calls to resized images
+ */
 class DefaultController extends Controller
 {
     /**
      * Main action: renders the image cache and returns it to the browser
+     *
+     * @param string $format A format name defined in config or a string [width]x[height]
+     * @param string $path   The path of the source file
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Snowcap\ImBundle\Exception\RuntimeException
      */
-    public function indexAction($format,$path)
+    public function indexAction($format, $path)
     {
         /** @var $im \Snowcap\ImBundle\Manager */
         $im = $this->get("snowcap_im.manager");
 
-        if(strpos($path,"http/") === 0 || strpos($path,"https/") === 0) {
-            $protocol = substr($path,0,strpos($path,"/"));
-            if(!$im->cacheExists($format,$path)) {
-                $new_path = str_replace($protocol . "/",$this->get("kernel")->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/',$path);
+        /** @var $kernel \Symfony\Component\HttpKernel\Kernel */
+        $kernel = $this->get('kernel');
 
-                @mkdir(dirname($new_path),0755,true);
+        if (strpos($path, "http/") === 0 || strpos($path, "https/") === 0) {
+            $protocol = substr($path, 0, strpos($path, "/"));
+            if (!$im->cacheExists($format, $path)) {
+                $newPath = str_replace($protocol . "/", $kernel->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
 
-                $fp = fopen($new_path, 'w');
+                @mkdir(dirname($newPath), 0755, true);
 
-                $ch = curl_init(str_replace($protocol . '/', $protocol . '://',$path));
+                $fp = fopen($newPath, 'w');
+
+                $ch = curl_init(str_replace($protocol . '/', $protocol . '://', $path));
                 curl_setopt($ch, CURLOPT_FILE, $fp);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
                 curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -36,21 +47,23 @@ class DefaultController extends Controller
                 curl_close($ch);
                 fclose($fp);
 
-                $im->mogrify($format, $new_path);
+                $im->mogrify($format, $newPath);
             }
         } else {
             $im->convert($format, $path);
         }
 
-        if(!$im->cacheExists($format,$path)) {
-            throw new \Exception(sprintf("Caching of image failed for %s in %s format", $path, $format));
+        if (!$im->cacheExists($format, $path)) {
+            throw new RuntimeException(sprintf("Caching of image failed for %s in %s format", $path, $format));
         } else {
-            $extension = pathinfo($path, PATHINFO_EXTENSION);;
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            ;
             $contentType = $this->getRequest()->getMimeType($extension);
             if (empty($contentType)) {
-                $contentType = 'image/'.$extension;
+                $contentType = 'image/' . $extension;
             }
-            return new Response($im->getCacheContent($format,$path), 200, array('Content-Type' => $contentType));
+
+            return new Response($im->getCacheContent($format, $path), 200, array('Content-Type' => $contentType));
         }
     }
 }

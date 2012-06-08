@@ -26,8 +26,7 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('formats')
             ->useAttributeAsKey('key')
             ->prototype('variable')->end()
-            ->end()
-        ;
+            ->end();
 
         return $treeBuilder;
     }

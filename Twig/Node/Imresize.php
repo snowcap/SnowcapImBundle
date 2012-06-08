@@ -15,6 +15,11 @@ use Twig_Compiler;
  */
 class Imresize extends Twig_Node
 {
+    /**
+     * @param Twig_NodeInterface $body   @see Twig_NodeInterface::__construct
+     * @param array              $lineno @see Twig_NodeInterface::__construct
+     * @param string             $tag    @see Twig_NodeInterface::__construct
+     */
     public function __construct(Twig_NodeInterface $body, $lineno, $tag = 'imresize')
     {
         parent::__construct(array('body' => $body), array(), $lineno, $tag);
@@ -23,7 +28,7 @@ class Imresize extends Twig_Node
     /**
      * Compiles the node to PHP.
      *
-     * @param Twig_Compiler A Twig_Compiler instance
+     * @param Twig_Compiler $compiler A Twig_Compiler instance
      */
     public function compile(Twig_Compiler $compiler)
     {
@@ -31,9 +36,6 @@ class Imresize extends Twig_Node
             ->addDebugInfo($this)
             ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
-            ->write("echo \$this->env->getExtension('snowcap_im')->convert(ob_get_clean());\n")
-        ;
+            ->write("echo \$this->env->getExtension('snowcap_im')->convert(ob_get_clean());\n");
     }
-
-
 }

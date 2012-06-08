@@ -22,14 +22,14 @@ class SnowcapImExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        if(isset($config['binary_path'])) {
-            $container->setParameter('binary_path' , $config['binary_path']);
+        if (isset($config['binary_path'])) {
+            $container->setParameter('binary_path', $config['binary_path']);
         }
-        if(isset($config['formats'])) {
-            $container->setParameter('formats' , $config['formats']);
+        if (isset($config['formats'])) {
+            $container->setParameter('formats', $config['formats']);
         }
     }
 }

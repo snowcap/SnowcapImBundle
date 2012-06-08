@@ -9,6 +9,9 @@ use Snowcap\ImBundle\Manager as ImManager;
 
 use Snowcap\CoreBundle\Doctrine\ORM\Event\PreFlushEventArgs;
 
+/**
+ * Event listener for Doctrine entities to evualuate and execute ImBundle annotations
+ */
 class MogrifySubscriber implements EventSubscriber
 {
     private $config = array();
@@ -24,12 +27,15 @@ class MogrifySubscriber implements EventSubscriber
     private $imManager;
 
     /**
-     * @param string $rootDir
+     * @param string    $rootDir   The dir to generate files
+     * @param ImManager $imManager The ImBundle mamager instance
      */
-    public function __construct($rootDir,ImManager $imManager){
+    public function __construct($rootDir, ImManager $imManager)
+    {
         $this->rootDir = $rootDir;
         $this->imManager = $imManager;
     }
+
     /**
      * Returns an array of events this subscriber wants to listen to.
      *
@@ -37,9 +43,12 @@ class MogrifySubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array('loadClassMetadata','prePersist','preFlush');
+        return array('loadClassMetadata', 'prePersist', 'preFlush');
     }
 
+    /**
+     * @param LoadClassMetadataEventArgs $eventArgs
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         $reader = new \Doctrine\Common\Annotations\AnnotationReader();
@@ -51,36 +60,46 @@ class MogrifySubscriber implements EventSubscriber
             ) {
                 continue;
             }
+            /** @var $annotation \Snowcap\ImBundle\Doctrine\Mapping\Mogrify */
             if ($annotation = $reader->getPropertyAnnotation($property, 'Snowcap\\ImBundle\\Doctrine\\Mapping\\Mogrify')) {
                 $field = $property->getName();
                 $this->config[$meta->getTableName()]['fields'][$field] = array(
                     'property' => $property,
-                    'params' => $annotation->params,
+                    'params'   => $annotation->params,
                 );
             }
         }
     }
 
+    /**
+     * @param PreFlushEventArgs $ea
+     */
     public function preFlush(PreFlushEventArgs $ea)
     {
+        /** @var $entityManager \Doctrine\ORM\EntityManager */
+        $entityManager = $ea->getEntityManager();
+
         /** @var $unitOfWork \Doctrine\ORM\UnitOfWork */
-        $unitOfWork = $ea->getEntityManager()->getUnitOfWork();
+        $unitOfWork = $entityManager->getUnitOfWork();
 
         $entityMaps = $unitOfWork->getIdentityMap();
-        foreach($entityMaps as $entities) {
-            foreach($entities as $entity) {
-                foreach($this->getFiles($entity,$ea->getEntityManager()) as $file) {
-                    $this->mogrify($entity,$file);
+        foreach ($entityMaps as $entities) {
+            foreach ($entities as $entity) {
+                foreach ($this->getFiles($entity, $ea->getEntityManager()) as $file) {
+                    $this->mogrify($entity, $file);
                 }
             }
         }
     }
 
+    /**
+     * @param LifecycleEventArgs $ea
+     */
     public function prePersist(LifecycleEventArgs $ea)
     {
         $entity = $ea->getEntity();
-        foreach($this->getFiles($entity,$ea->getEntityManager()) as $file) {
-            $this->mogrify($entity,$file);
+        foreach ($this->getFiles($entity, $ea->getEntityManager()) as $file) {
+            $this->mogrify($entity, $file);
         }
     }
 
@@ -89,7 +108,7 @@ class MogrifySubscriber implements EventSubscriber
         $classMetaData = $entityManager->getClassMetaData(get_class($entity));
         $tableName = $classMetaData->getTableName();
 
-        if(array_key_exists($tableName, $this->config)) {
+        if (array_key_exists($tableName, $this->config)) {
             return $this->config[$tableName]['fields'];
         } else {
             return array();
@@ -99,7 +118,8 @@ class MogrifySubscriber implements EventSubscriber
     private function mogrify($entity, $file)
     {
         $propertyName = $file['property']->name;
-        if(isset($entity->$propertyName)) {
+        if (isset($entity->$propertyName)) {
+            /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
             $uploadedFile = $entity->$propertyName;
             if (null !== $uploadedFile) {
                 $this->imManager->mogrify($file['params'], $uploadedFile->getPathName());
@@ -107,6 +127,9 @@ class MogrifySubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @return string
+     */
     private function getUploadRootDir()
     {
         // the absolute directory path where uploaded documents should be saved

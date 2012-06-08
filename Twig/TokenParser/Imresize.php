@@ -39,6 +39,11 @@ class Imresize extends Twig_TokenParser
         return new Twig_Node_Imresize($body, $lineno, $this->getTag());
     }
 
+    /**
+     * @param Twig_Token $token
+     *
+     * @return bool
+     */
     public function decideImresizeEnd(Twig_Token $token)
     {
         return $token->test('endimresize');

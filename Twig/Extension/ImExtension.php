@@ -12,11 +12,17 @@ class ImExtension extends \Twig_Extension
 {
     private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @return array
+     */
     public function getTokenParsers()
     {
         return array(
@@ -24,6 +30,9 @@ class ImExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         return array(
@@ -31,6 +40,9 @@ class ImExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         return array(
@@ -41,7 +53,8 @@ class ImExtension extends \Twig_Extension
     /**
      * Called by the compile method for each <img> tag found
      *
-     * @param $imgTag array of matches
+     * @param string $imgTag
+     *
      * @return string
      */
     public function convert($imgTag)
@@ -55,33 +68,33 @@ class ImExtension extends \Twig_Extension
             $width = $tag->attr("width");
             $height = $tag->attr("height");
 
-            if($width == null && $height == null) {
+            if ($width == null && $height == null) {
                 return $imgTag;
             }
 
             $format = $width . "x" . $height;
 
-            return preg_replace("| src=[\"']" . $src . "[\"']|"," src=\"" . $this->imResize($src, $format) . "\"", $imgTag);
-        } catch(\Exception $e) {
+            return preg_replace("| src=[\"']" . $src . "[\"']|", " src=\"" . $this->imResize($src, $format) . "\"", $imgTag);
+        } catch (\Exception $e) {
             return $imgTag;
         }
     }
 
     /**
-     *
      * Returns the cached path, after executing the asset twig function
      *
-     * @param $path string
-     * @param $format format
+     * @param string $path   Path of the source file
+     * @param string $format Imbundle format string
+     *
      * @return mixed
      */
     public function imResize($path, $format)
     {
-        if(strpos($path,"http://") === 0 || strpos($path,"https://") === 0) {
-            $path = str_replace("://","/",$path);
+        if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
+            $path = str_replace("://", "/", $path);
         }
 
-        if(strpos($path,"/") === 0) {
+        if (strpos($path, "/") === 0) {
             $separator = "";
         } else {
             $separator = "/";
@@ -90,6 +103,9 @@ class ImExtension extends \Twig_Extension
         return $this->container->get('templating.helper.assets')->getUrl("cache/im/" . $format . $separator . trim($path));
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'snowcap_im';
