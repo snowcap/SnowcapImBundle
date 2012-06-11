@@ -54,6 +54,8 @@ class Wrapper
      * @param string $outputfile @see _self::buildCommand
      *
      * @return string
+     *
+     * @codeCoverageIgnore
      */
     public function run($command, $inputfile, $attributes = array(), $outputfile = "")
     {

@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/symfony": "v2.0.15",
+        "mikey179/vfsStream": "v1.0.0"
+    }
+}

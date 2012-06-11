@@ -11,6 +11,9 @@
 
 namespace Snowcap\ImBundle\Tests;
 
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamWrapper;
+
 use Snowcap\ImBundle\Wrapper;
 
 /**
@@ -22,11 +25,17 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
     private $wrapper;
 
     /**
+     * @var  \org\bovigo\vfs\vfsStreamDirectory
+     */
+    private $root;
+
+    /**
      * Pre tasks
      */
     public function setUp()
     {
         $this->wrapper = new Wrapper('\Snowcap\ImBundle\Tests\Mock\Process');
+        $this->root = vfsStream::setup('exampleDir');
     }
 
     /**
@@ -226,5 +235,30 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
             array('bignou'),
             array('bignou didjou'),
         );
+    }
+
+    /**
+     * Checking folder creation & retrieval
+     */
+    public function testCheckDirectory()
+    {
+        $method = new \ReflectionMethod($this->wrapper, 'checkDirectory');
+        $method->setAccessible(true);
+
+        $this->assertFalse($this->root->hasChild('mypath'));
+        $method->invoke($this->wrapper, vfsStream::url('exampleDir/mypath/.'));
+        $this->assertTrue($this->root->hasChild('mypath'));
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testCheckDirectoryException()
+    {
+        $method = new \ReflectionMethod($this->wrapper, 'checkDirectory');
+        $method->setAccessible(true);
+
+        vfsStreamWrapper::getRoot()->chmod(0400);
+        $method->invoke($this->wrapper, vfsStream::url('exampleDir/mypath/.'));
     }
 }
