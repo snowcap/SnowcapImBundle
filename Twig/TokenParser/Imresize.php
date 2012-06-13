@@ -28,6 +28,9 @@ use \Snowcap\ImBundle\Twig\Node\Imresize as Twig_Node_Imresize;
  *      </div>
  * {% endimresize %}
  * </pre>
+ *
+ * @codeCoverageIgnore
+ *
  */
 class Imresize extends Twig_TokenParser
 {

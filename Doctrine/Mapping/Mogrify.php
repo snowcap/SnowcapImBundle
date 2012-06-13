@@ -17,6 +17,7 @@ use Doctrine\Common\Annotations\Annotation;
  * Annotation definition class
  *
  * @Annotation
+ * @codeCoverageIgnore
  */
 class Mogrify extends Annotation
 {

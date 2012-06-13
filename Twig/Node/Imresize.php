@@ -21,6 +21,7 @@ use Twig_Compiler;
  * It looks the HTML width and height attributes, and modifies the src attribute to load a cached image
  * with the proper size
  *
+ * @codeCoverageIgnore
  */
 class Imresize extends Twig_Node
 {
