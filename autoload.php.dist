@@ -26,7 +26,7 @@ spl_autoload_register(function($class) {
         require_once $path;
 
         return true;
-    } elseif(0 === strpos($class, 'org\\bovigo\\vfs\\vfsStream')) {
+    } elseif(0 === strpos($class, 'org\\bovigo\\vfs')) {
         $path = __DIR__.'/vendor' . '/mikey179/vfsStream/src/main/php/' . implode('/', array_slice(explode('\\', $class), 0)).'.php';
         if (!stream_resolve_include_path($path)) {
             return false;

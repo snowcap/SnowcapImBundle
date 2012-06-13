@@ -124,6 +124,7 @@ class Manager
      * @param string $inputfile Source file path
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function convert($format, $inputfile)
     {
@@ -139,6 +140,7 @@ class Manager
      * @param string $file   Source file path
      *
      * @return string
+     * @codeCoverageIgnore
      */
     public function mogrify($format, $file)
     {
