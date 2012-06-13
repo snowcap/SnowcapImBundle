@@ -24,6 +24,8 @@ class ImExtension extends \Twig_Extension
 
     /**
      * @param ContainerInterface $container
+     *
+     * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)
     {
@@ -32,6 +34,7 @@ class ImExtension extends \Twig_Extension
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getTokenParsers()
     {
@@ -42,6 +45,7 @@ class ImExtension extends \Twig_Extension
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getFilters()
     {
@@ -52,6 +56,7 @@ class ImExtension extends \Twig_Extension
 
     /**
      * @return array
+     * @codeCoverageIgnore
      */
     public function getFunctions()
     {
@@ -115,6 +120,7 @@ class ImExtension extends \Twig_Extension
 
     /**
      * @return string
+     * @codeCoverageIgnore
      */
     public function getName()
     {
