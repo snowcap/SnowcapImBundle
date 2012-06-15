@@ -150,7 +150,7 @@ class Wrapper
      *
      * @throws RuntimeException
      */
-    private function checkDirectory($path)
+    public function checkDirectory($path)
     {
         $dir = dirname($path);
         if (!is_dir($dir)) {

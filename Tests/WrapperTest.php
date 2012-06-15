@@ -242,11 +242,8 @@ class WrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckDirectory()
     {
-        $method = new \ReflectionMethod($this->wrapper, 'checkDirectory');
-        $method->setAccessible(true);
-
         $this->assertFalse($this->root->hasChild('mypath'));
-        $method->invoke($this->wrapper, vfsStream::url('exampleDir/mypath/.'));
+        $this->wrapper->checkDirectory(vfsStream::url('exampleDir/mypath/.'));
         $this->assertTrue($this->root->hasChild('mypath'));
     }
 

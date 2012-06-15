@@ -150,6 +150,36 @@ class Manager
     }
 
     /**
+     * @param string $format ImBundle format string
+     * @param string $path   cached path for an external image - ex: http/somepath/somefile.jpg or https/somepath/someotherfile.jpg
+     *
+     * The cached path is equivalent to the original path except that the '://' syntax after the protocol is replaced by a simple "/", to conserve a correct URL encoded string
+     * The Twig tag 'imResize' will automatically make this conversion for you
+     *
+     * @return string
+     */
+    public function downloadExternalImage($format, $path)
+    {
+        $protocol = substr($path, 0, strpos($path, "/"));
+        $newPath = str_replace($protocol . "/", $this->kernel->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
+
+        $this->wrapper->checkDirectory($newPath);
+
+        $fp = fopen($newPath, 'w');
+
+        $ch = curl_init(str_replace($protocol . '/', $protocol . '://', $path));
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
+
+        return $newPath;
+    }
+
+    /**
      * Returns the attributes for converting the image regarding a specific format
      *
      * @param string $format
