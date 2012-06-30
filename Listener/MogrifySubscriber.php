@@ -16,7 +16,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Snowcap\ImBundle\Manager as ImManager;
 
-use Snowcap\CoreBundle\Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 
 /**
  * Event listener for Doctrine entities to evualuate and execute ImBundle annotations
