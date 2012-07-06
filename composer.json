@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony SnowcapImBundle",
     "keywords": ["image", "thumbnail", "text"],
-    "homepage": "https://github.com/snowcap/SnowcapI18nBundle",
+    "homepage": "https://github.com/snowcap/SnowcapImBundle",
     "license": "MIT",
     "authors": [
         {
