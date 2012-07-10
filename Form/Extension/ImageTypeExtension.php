@@ -12,9 +12,10 @@
 namespace Snowcap\ImBundle\Form\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormViewInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Snowcap\ImBundle\Manager;
 
@@ -49,18 +50,18 @@ class ImageTypeExtension extends AbstractTypeExtension
      *
      * @return array
      */
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults(array(
             'format' => null,
-        );
+        ));
     }
 
     /**
      * @param \Symfony\Component\Form\FormBuilder $builder
      * @param array                               $options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->setAttribute('format', $options['format']);
     }
@@ -69,7 +70,7 @@ class ImageTypeExtension extends AbstractTypeExtension
      * @param \Symfony\Component\Form\FormView      $view
      * @param \Symfony\Component\Form\FormInterface $form
      */
-    public function buildView(FormView $view, FormInterface $form)
+    public function buildView(FormViewInterface $view, FormInterface $form, array $options)
     {
         $format = $form->getAttribute('format');
         $imageSrc = $view->get('image_src');
