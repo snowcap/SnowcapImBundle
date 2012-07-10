@@ -62,7 +62,15 @@ class MogrifySubscriber implements EventSubscriber
     {
         $reader = new \Doctrine\Common\Annotations\AnnotationReader();
         $meta = $eventArgs->getClassMetadata();
-        foreach ($meta->getReflectionClass()->getProperties() as $property) {
+        $class = $meta->getReflectionClass();
+        if (!$class) {
+            // this happens when running annotation driver in combination with
+            // static reflection services. This is not the nicest fix
+            $class = new \ReflectionClass($meta->name);
+        }
+
+
+        foreach ($class->getProperties() as $property) {
             if ($meta->isMappedSuperclass && !$property->isPrivate() ||
                 $meta->isInheritedField($property->name) ||
                 isset($meta->associationMappings[$property->name]['inherited'])
