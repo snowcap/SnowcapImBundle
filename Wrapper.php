@@ -41,7 +41,7 @@ class Wrapper
      */
     public function __construct($processClass, $binaryPath = "")
     {
-        $this->binaryPath = $binaryPath;
+        $this->binaryPath = empty($binaryPath) ? $binaryPath : rtrim($binaryPath, '/') . '/';
         $this->processClass = $processClass;
     }
 
