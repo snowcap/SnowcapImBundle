@@ -35,6 +35,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('binary_path')->end()
+            ->scalarNode('wrapper_class')->end()
+            ->scalarNode('manager_class')->end()
             ->arrayNode('formats')
             ->useAttributeAsKey('key')
             ->prototype('variable')->end()
