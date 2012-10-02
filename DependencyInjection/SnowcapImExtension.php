@@ -42,5 +42,11 @@ class SnowcapImExtension extends Extension
         if (isset($config['formats'])) {
             $container->setParameter('formats', $config['formats']);
         }
+        if (isset($config['manager_class'])) {
+            $container->setParameter('manager_class', $config['manager_class']);
+        }
+        if (isset($config['wrapper_class'])) {
+            $container->setParameter('wrapper_class', $config['wrapper_class']);
+        }
     }
 }
