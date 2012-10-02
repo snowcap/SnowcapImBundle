@@ -27,32 +27,32 @@ class Manager
     /**
      * @var Wrapper
      */
-    private $wrapper;
+    protected $wrapper;
 
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
      */
-    private $kernel;
+    protected $kernel;
 
     /**
      * @var array
      */
-    private $formats;
+    protected $formats;
 
     /**
      * @var string
      */
-    private $webPath;
+    protected $webPath;
 
     /**
      * @var string
      */
-    private $imPath;
+    protected $imPath;
 
     /**
      * @var string
      */
-    private $cachePath;
+    protected $cachePath;
 
     /**
      * @param Wrapper $wrapper The ImBundle Wrapper instance
