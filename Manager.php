@@ -130,7 +130,7 @@ class Manager
     {
         $this->checkImage($inputfile);
 
-        return $this->wrapper->run("convert", $this->webPath . $inputfile, $this->convertFormat($format), $this->cachePath . $format . '/' . $inputfile);
+        return $this->wrapper->run("convert", $this->webPath . $inputfile, $this->convertFormat($format), $this->cachePath . $this->pathify($format) . '/' . $inputfile);
     }
 
     /**
@@ -215,6 +215,22 @@ class Manager
     {
         if (!file_exists($this->webPath . $path) && !file_exists($path)) {
             throw new NotFoundException(sprintf("Unable to find the image \"%s\" to cache", $path));
+        }
+    }
+
+    /**
+     * Takes a format (array or string) and return it as a valid path string
+     *
+     * @param mixed $format
+     *
+     * @return string
+     */
+    private function pathify($format)
+    {
+        if (is_array($format)) {
+            return md5(serialize($format));
+        } else {
+            return $format;
         }
     }
 
