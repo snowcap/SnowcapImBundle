@@ -224,6 +224,29 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @param Manager $manager
      *
+     * @depends test__construct
+     */
+    public function testPathify(Manager $manager)
+    {
+        $method = new \ReflectionMethod($manager, 'pathify');
+        $method->setAccessible(true);
+
+        $simplePath = $method->invoke($manager, '200x150');
+        $this->assertTrue(is_string($simplePath));
+
+        $path = $method->invoke($manager, array('crop' => '100x100'));
+        $this->assertTrue(is_string($path));
+
+        $otherPath = $method->invoke($manager, array('crop' => '100x100+10'));
+        $this->assertTrue(is_string($otherPath));
+
+        $this->assertNotEquals($simplePath, $path);
+        $this->assertNotEquals($path, $otherPath);
+    }
+
+    /**
+     * @param Manager $manager
+     *
      * @return \ReflectionClass
      */
     private function getManagerReflection(Manager $manager)
