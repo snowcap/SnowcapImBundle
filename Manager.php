@@ -70,6 +70,17 @@ class Manager
     }
 
     /**
+     * Add a format to the config
+     *
+     * @param string $name
+     * @param string $config
+     */
+    public function addFormat($name, $config)
+    {
+        $this->formats[$name] = $config;
+    }
+
+    /**
      * @param string $path
      */
     public function setCachePath($path)
@@ -233,5 +244,4 @@ class Manager
             return $format;
         }
     }
-
 }
