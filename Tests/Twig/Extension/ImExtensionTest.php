@@ -53,6 +53,9 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
             array('hop <img src="path/img.jpg" width="100" height="120" />hop', 'hop <img src="/cache/im/100x120/path/img.jpg" width="100" height="120" />hop'),
             array('hop <img height="100" src="path/img.jpg"  width="120" data="content" />hop', 'hop <img height="100" src="/cache/im/120x100/path/img.jpg"  width="120" data="content" />hop'),
             array('hop <img height="100" src="path/img.jpg"  width="120" data="path/img.jpg" />hop', 'hop <img height="100" src="/cache/im/120x100/path/img.jpg"  width="120" data="path/img.jpg" />hop'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img2.jpg" width="100" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/100x/img2.jpg" width="100" /> hip'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="120" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/120x/img.jpg" width="120" /> hip'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="100" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/100x/img.jpg" width="100" /> hip'),
         );
     }
 

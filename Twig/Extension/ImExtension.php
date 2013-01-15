@@ -66,33 +66,34 @@ class ImExtension extends \Twig_Extension
     }
 
     /**
-     * Called by the compile method for each <img> tag found
+     * Called by the compile method to replace the image sources with image cache sources
      *
-     * @param string $imgTag
+     * @param string $html
      *
      * @return string
      */
-    public function convert($imgTag)
+    public function convert($html)
     {
-        $crawler = new Crawler();
-        $crawler->addContent($imgTag);
-        $tag = $crawler->filter("img");
+        preg_match_all('|<img ([^>]+)>|', $html, $matches);
 
-        try {
-            $src = $tag->attr("src");
-            $width = $tag->attr("width");
-            $height = $tag->attr("height");
+        foreach($matches[0] as $img)
+        {
+            $crawler = new Crawler();
+            $crawler->addContent($img);
+            $imgTag = $crawler->filter("img");
 
-            if ($width == null && $height == null) {
-                return $imgTag;
+            $src = $imgTag->attr('src');
+            $width = $imgTag->attr('width');
+            $height = $imgTag->attr('height');
+
+            if ($width !== '' || $height !== '') {
+                $format = $width . "x" . $height;
+                $updatedTagString = preg_replace("| src=[\"']" . $src . "[\"']|", " src=\"" . $this->imResize($src, $format) . "\"", $img);
+                $html = str_replace($img, $updatedTagString, $html);
             }
-
-            $format = $width . "x" . $height;
-
-            return preg_replace("| src=[\"']" . $src . "[\"']|", " src=\"" . $this->imResize($src, $format) . "\"", $imgTag);
-        } catch (\Exception $e) {
-            return $imgTag;
         }
+
+        return $html;
     }
 
     /**
