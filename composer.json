@@ -2,7 +2,7 @@
     "name": "snowcap/im-bundle",
     "type": "symfony-bundle",
     "description": "Imagemagick wrapper for Symfony2",
-    "keywords": ["image", "thumbnail", "text"],
+    "keywords": ["image", "thumbnail", "imagemagick", "symfony"],
     "homepage": "https://github.com/snowcap/SnowcapI18nBundle",
     "license": "MIT",
     "authors": [
