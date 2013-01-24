@@ -1,7 +1,7 @@
 {
     "name": "snowcap/im-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony SnowcapImBundle",
+    "description": "Imagemagick wrapper for Symfony2",
     "keywords": ["image", "thumbnail", "text"],
     "homepage": "https://github.com/snowcap/SnowcapI18nBundle",
     "license": "MIT",
