@@ -53,7 +53,7 @@ class ImageTypeExtension extends AbstractTypeExtension
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'format' => null,
+            'im_format' => null,
         ));
     }
 
@@ -64,8 +64,8 @@ class ImageTypeExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (isset($view->vars['file_url']) && null !== $options['format']) {
-            $view->vars['file_url'] = $this->imManager->getUrl($options['format'], $view->vars['file_url']);
+        if (isset($view->vars['file_url']) && null !== $options['im_format']) {
+            $view->vars['file_url'] = $this->imManager->getUrl($options['im_format'], $view->vars['file_url']);
         }
     }
 }
