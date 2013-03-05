@@ -31,6 +31,9 @@
     "require-dev": {
         "mikey179/vfsStream": "v1.0.0"
     },
+    "suggest": {
+        "snowcap/core-bundle": "ImBundle provides a form type extension for the Snowcap CoreBundle ImageType"
+    },
     "autoload": {
         "psr-0": { "Snowcap\\ImBundle": "" }
     },

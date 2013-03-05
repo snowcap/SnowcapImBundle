@@ -64,8 +64,8 @@ class ImageTypeExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (isset($view->vars['image_src']) && null !== $options['format']) {
-            $view->vars['image_src'] = $this->imManager->getUrl($options['format'], $view->vars['image_src']);
+        if (isset($view->vars['file_url']) && null !== $options['format']) {
+            $view->vars['file_url'] = $this->imManager->getUrl($options['format'], $view->vars['file_url']);
         }
     }
 }
