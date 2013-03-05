@@ -46,7 +46,7 @@ class ImageTypeExtension extends AbstractTypeExtension
     }
 
     /**
-     * @param array $options
+     * @param \Symfony\Component\OptionsResolver\OptionsResolverInterface $resolver
      *
      * @return array
      */
@@ -58,24 +58,14 @@ class ImageTypeExtension extends AbstractTypeExtension
     }
 
     /**
-     * @param \Symfony\Component\Form\FormBuilder $builder
-     * @param array                               $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->setAttribute('format', $options['format']);
-    }
-
-    /**
      * @param \Symfony\Component\Form\FormView      $view
      * @param \Symfony\Component\Form\FormInterface $form
+     * @param array $options
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $format = $form->getAttribute('format');
-        $imageSrc = $view->get('image_src');
-        if ($imageSrc !== null && $format !== null) {
-            $view->vars['image_src'] = $this->imManager->getUrl($format, $imageSrc);
+        if (isset($view->vars['image_src']) && null !== $options['format']) {
+            $view->vars['image_src'] = $this->imManager->getUrl($options['format'], $view->vars['image_src']);
         }
     }
 }
