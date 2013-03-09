@@ -23,6 +23,7 @@
             "homepage": "http://www.snowcap.be"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "2.2.*",
@@ -37,5 +38,10 @@
     "autoload": {
         "psr-0": { "Snowcap\\ImBundle": "" }
     },
-    "target-dir": "Snowcap/ImBundle"
+    "target-dir": "Snowcap/ImBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2.x-dev"
+        }
+    }
 }
