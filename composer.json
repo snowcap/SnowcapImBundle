@@ -37,6 +37,5 @@
     "autoload": {
         "psr-0": { "Snowcap\\ImBundle": "" }
     },
-    "target-dir": "Snowcap/ImBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Snowcap/ImBundle"
 }
