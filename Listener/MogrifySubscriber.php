@@ -127,9 +127,11 @@ class MogrifySubscriber implements EventSubscriber
     private function mogrify($entity, $file)
     {
         $propertyName = $file['property']->name;
-        if (isset($entity->$propertyName)) {
+
+        $getter = 'get' . ucFirst($propertyName);
+        if (method_exists($entity, $getter)) {
             /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
-            $uploadedFile = $entity->$propertyName;
+            $uploadedFile = $entity->$getter();
             if (null !== $uploadedFile) {
                 $this->imManager->mogrify($file['params'], $uploadedFile->getPathName());
             }
