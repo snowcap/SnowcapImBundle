@@ -38,10 +38,5 @@
     "autoload": {
         "psr-0": { "Snowcap\\ImBundle": "" }
     },
-    "target-dir": "Snowcap/ImBundle",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.2.x-dev"
-        }
-    }
+    "target-dir": "Snowcap/ImBundle"
 }
