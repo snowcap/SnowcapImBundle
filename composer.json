@@ -26,10 +26,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": ">=2.2,<2.4-dev"
+        "symfony/framework-bundle": ">=2.2"
     },
     "require-dev": {
-        "symfony/symfony": ">=2.2,<2.4-dev",
+        "symfony/symfony": ">=2.2",
         "mikey179/vfsStream": "v1.0.0"
     },
     "suggest": {
