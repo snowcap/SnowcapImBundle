@@ -48,6 +48,7 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
             array('hop hop', 'hop hop'),
             array('<img src="img.jpg"/>', '<img src="img.jpg"/>'),
             array('hop <img src="img.jpg" />hop', 'hop <img src="img.jpg" />hop'),
+            array('hop <img src="img.jpg" width=""/>hop', 'hop <img src="img.jpg" width=""/>hop'),
             array('hop <img src="img.jpg" width="100" />hop', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop'),
             array('hop <img src="path/img.jpg" height="120"/>hop', 'hop <img src="/cache/im/x120/path/img.jpg" height="120"/>hop'),
             array('hop <img src="path/img.jpg" width="100" height="120" />hop', 'hop <img src="/cache/im/100x120/path/img.jpg" width="100" height="120" />hop'),

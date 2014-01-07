@@ -86,7 +86,7 @@ class ImExtension extends \Twig_Extension
             $width = $imgTag->attr('width');
             $height = $imgTag->attr('height');
 
-            if ($width !== '' || $height !== '') {
+            if (!empty($width) || !empty($height)) {
                 $format = $width . "x" . $height;
                 $updatedTagString = preg_replace("| src=[\"']" . $src . "[\"']|", " src=\"" . $this->imResize($src, $format) . "\"", $img);
                 $html = str_replace($img, $updatedTagString, $html);
