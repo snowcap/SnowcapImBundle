@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Imagemagick wrapper for Symfony2",
     "keywords": ["image", "thumbnail", "imagemagick", "symfony"],
-    "homepage": "https://github.com/snowcap/SnowcapI18nBundle",
+    "homepage": "https://github.com/snowcap/SnowcapImBundle",
     "license": "MIT",
     "authors": [
         {
