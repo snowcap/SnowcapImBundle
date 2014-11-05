@@ -208,7 +208,7 @@ class Manager
         if (array_key_exists($format, $this->formats)) {
             // it's a format defined in config, let's use all defined parameters
             return $this->formats[$format];
-        } elseif (preg_match("/^([0-9]*)x([0-9]*)/", $format)) {
+        } elseif (preg_match("/^([0-9]*)x([0-9]*[><!\^]*)/", $format)) {
             // it's a custom [width]x[height] format, let's make a thumb
             return array('thumbnail' => $format);
         } else {
