@@ -36,13 +36,20 @@ class Wrapper
     );
 
     /**
+     * @var int Timeout for the process
+     */
+    private $timeout;
+
+    /**
      * @param string $processClass The class name of the command line processor
      * @param string $binaryPath   The path where the Imagemagick binaries lies
+     * @param int timeout The timeout in seconds
      */
-    public function __construct($processClass, $binaryPath = "")
+    public function __construct($processClass, $binaryPath = "", $timeout = 60)
     {
         $this->binaryPath = empty($binaryPath) ? $binaryPath : rtrim($binaryPath, '/') . '/';
         $this->processClass = $processClass;
+        $this->timeout = $timeout;
     }
 
     /**
@@ -106,6 +113,7 @@ class Wrapper
 
         /** @var $process \Symfony\Component\Process\Process */
         $process = new $this->processClass($commandString);
+        $process->setTimeout($this->timeout);
         $process->run();
 
         if (!$process->isSuccessful()) {

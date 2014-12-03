@@ -48,5 +48,8 @@ class SnowcapImExtension extends Extension
         if (isset($config['wrapper_class'])) {
             $container->setParameter('wrapper_class', $config['wrapper_class']);
         }
+        if (isset($config['timeout'])) {
+            $container->setParameter('snowcap_im.timeout', $config['timeout']);
+        }
     }
 }

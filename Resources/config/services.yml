@@ -3,11 +3,12 @@ parameters:
     formats: ~
     wrapper_class: Snowcap\ImBundle\Wrapper
     manager_class: Snowcap\ImBundle\Manager
+    snowcap_im.timeout: 60
 
 services:
     snowcap_im.wrapper:
         class: %wrapper_class%
-        arguments: ['\Symfony\Component\Process\Process', %binary_path%]
+        arguments: ['\Symfony\Component\Process\Process', %binary_path%, %snowcap_im.timeout%]
     snowcap_im.manager:
         class: %manager_class%
         arguments: [@snowcap_im.wrapper, @kernel, %formats%]
