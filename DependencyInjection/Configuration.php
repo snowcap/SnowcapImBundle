@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('binary_path')->end()
                 ->scalarNode('wrapper_class')->end()
                 ->scalarNode('manager_class')->end()
+                ->scalarNode('timeout')->end()
                 ->arrayNode('formats')
                     ->useAttributeAsKey('key')
                     ->prototype('variable')
