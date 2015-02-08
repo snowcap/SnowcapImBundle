@@ -11,10 +11,12 @@
 
 namespace Snowcap\ImBundle\Tests\Mock;
 
+use \Symfony\Component\Process\Process as BaseProcess;
+
 /**
  * Mock object for the process class
  */
-class Process
+class Process extends BaseProcess
 {
     private $cmd;
     private $success;

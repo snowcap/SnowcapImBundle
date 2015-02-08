@@ -51,8 +51,15 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'list' => array('resize' => '100x100')
         );
 
-        $kernel = $this->getMock('Symfony\Component\HttpKernel\Kernel', array(), array('dev', 0));
-        $kernel->expects($this->any())->method('getRootDir')->will($this->returnValue($this->rootDir));
+        $kernel = $this
+            ->getMockBuilder('Symfony\Component\HttpKernel\Kernel')
+            ->setConstructorArgs(array('test', false))
+            ->getMockForAbstractClass()
+        ;
+
+        $p = new \ReflectionProperty($kernel, 'rootDir');
+        $p->setAccessible(true);
+        $p->setValue($kernel, $this->rootDir);
 
 
         $wrapper = new Wrapper('\Snowcap\ImBundle\Tests\Mock\Process');
