@@ -37,16 +37,16 @@ class SnowcapImExtension extends Extension
         $loader->load('services.yml');
 
         if (isset($config['binary_path'])) {
-            $container->setParameter('binary_path', $config['binary_path']);
+            $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
         }
         if (isset($config['formats'])) {
-            $container->setParameter('formats', $config['formats']);
+            $container->setParameter('snowcap_im.formats', $config['formats']);
         }
         if (isset($config['manager_class'])) {
-            $container->setParameter('manager_class', $config['manager_class']);
+            $container->setParameter('snowcap_im.manager_class', $config['manager_class']);
         }
         if (isset($config['wrapper_class'])) {
-            $container->setParameter('wrapper_class', $config['wrapper_class']);
+            $container->setParameter('snowcap_im.wrapper_class', $config['wrapper_class']);
         }
         if (isset($config['timeout'])) {
             $container->setParameter('snowcap_im.timeout', $config['timeout']);

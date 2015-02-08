@@ -1,17 +1,17 @@
 parameters:
-    binary_path: ~
-    formats: ~
-    wrapper_class: Snowcap\ImBundle\Wrapper
-    manager_class: Snowcap\ImBundle\Manager
+    snowcap_im.binary_path: ~
+    snowcap_im.formats: ~
+    snowcap_im.wrapper_class: Snowcap\ImBundle\Wrapper
+    snowcap_im.manager_class: Snowcap\ImBundle\Manager
     snowcap_im.timeout: 60
 
 services:
     snowcap_im.wrapper:
-        class: %wrapper_class%
-        arguments: ['\Symfony\Component\Process\Process', %binary_path%, %snowcap_im.timeout%]
+        class: %snowcap_im.wrapper_class%
+        arguments: ['\Symfony\Component\Process\Process', %snowcap_im.binary_path%, %snowcap_im.timeout%]
     snowcap_im.manager:
-        class: %manager_class%
-        arguments: [@snowcap_im.wrapper, @kernel, %formats%]
+        class: %snowcap_im.manager_class%
+        arguments: [@snowcap_im.wrapper, @kernel, %snowcap_im.formats%]
 
     snowcap_im.twig:
         class: Snowcap\ImBundle\Twig\Extension\ImExtension
