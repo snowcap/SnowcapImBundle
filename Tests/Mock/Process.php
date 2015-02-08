@@ -23,16 +23,23 @@ class Process extends BaseProcess
 
     /**
      * @param string $cmd
+     * @param null $cwd
+     * @param array $env
+     * @param null $input
+     * @param int $timeout
+     * @param array $options
      */
-    public function __construct($cmd)
+    public function __construct($cmd, $cwd = null, array $env = null, $input = null, $timeout = 60, array $options = array())
     {
         $this->cmd = $cmd;
     }
 
     /**
      * Run the process
+     * @param null $callback
+     * @return int|void
      */
-    public function run()
+    public function run($callback = null)
     {
         if ($this->cmd === 'mogrify "somefailingstructure') {
             $this->success = false;
