@@ -100,7 +100,7 @@ class Manager
      */
     public function cacheExists($format, $path)
     {
-        return (file_exists($this->cachePath . $format . '/' . $path) === true);
+        return (file_exists($this->cachePath . $this->pathify($format) . '/' . $path) === true);
     }
 
     /**
@@ -113,7 +113,7 @@ class Manager
      */
     public function getCacheContent($format, $path)
     {
-        return file_get_contents($this->cachePath . $format . '/' . $path);
+        return file_get_contents($this->cachePath . $this->pathify($format) . '/' . $path);
     }
 
     /**
@@ -126,7 +126,7 @@ class Manager
      */
     public function getUrl($format, $path)
     {
-        return $this->imPath . $format . '/' . $path;
+        return $this->imPath . $this->pathify($format) . '/' . $path;
     }
 
     /**
@@ -173,7 +173,7 @@ class Manager
     public function downloadExternalImage($format, $path)
     {
         $protocol = substr($path, 0, strpos($path, "/"));
-        $newPath = str_replace($protocol . "/", $this->kernel->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
+        $newPath = str_replace($protocol . "/", $this->kernel->getRootDir() . '/../web/cache/im/' . $this->pathify($format) . '/' . $protocol . '/', $path);
 
         $this->wrapper->checkDirectory($newPath);
 
@@ -247,7 +247,7 @@ class Manager
         if (is_array($format)) {
             return md5(serialize($format));
         } else {
-            return $format;
+            return str_replace(array('<', '>'), array('L','G'), $format);
         }
     }
 }
