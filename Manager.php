@@ -23,8 +23,6 @@ use Snowcap\ImBundle\Exception\InvalidArgumentException;
  */
 class Manager
 {
-    const DEFAULT_IM_PATH = 'cache/im/';
-
     /**
      * @var Wrapper
      */
@@ -43,6 +41,11 @@ class Manager
     /**
      * @var string
      */
+    protected $rootDir;
+
+    /**
+     * @var string
+     */
     protected $webPath;
 
     /**
@@ -51,23 +54,21 @@ class Manager
     protected $imPath;
 
     /**
-     * @var string
-     */
-    protected $cachePath;
-
-    /**
      * @param Wrapper $wrapper The ImBundle Wrapper instance
-     * @param Kernel  $kernel  Symfony Kernel component instance
-     * @param array   $formats Formats definition
+     * @param Kernel $kernel Symfony Kernel component instance
+     * @param string $rootDir The root directory of your web_path and im_path
+     * @param string $webPath Relative path to the web folder (relative to root directory)
+     * @param string $imPath Relative path to the images cache folder (relative to web path)
+     * @param array $formats Formats definition
      */
-    public function __construct(Wrapper $wrapper, Kernel $kernel, $formats = array())
+    public function __construct(Wrapper $wrapper, Kernel $kernel, $rootDir, $webPath, $imPath, $formats = array())
     {
         $this->wrapper = $wrapper;
         $this->kernel = $kernel;
         $this->formats = $formats;
-        $this->webPath = $this->kernel->getRootDir() . "/../web/";
-        $this->imPath = self::DEFAULT_IM_PATH;
-        $this->cachePath = $this->webPath . $this->imPath;
+        $this->setRootDir($rootDir);
+        $this->setWebPath($webPath);
+        $this->setImPath($imPath);
     }
 
     /**
@@ -82,12 +83,59 @@ class Manager
     }
 
     /**
-     * @param string $path
+     * @return string
      */
-    public function setCachePath($path)
+    public function getRootDir()
     {
-        $this->imPath = $path;
-        $this->cachePath = $this->webPath . $this->imPath;
+        return $this->rootDir;
+    }
+
+    /**
+     * @param string $rootDir
+     */
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = rtrim($rootDir, '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebPath()
+    {
+        return $this->webPath;
+    }
+
+    /**
+     * @param string $webPath
+     */
+    public function setWebPath($webPath)
+    {
+        $this->webPath = trim($webPath, '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getImPath()
+    {
+        return $this->imPath;
+    }
+
+    /**
+     * @param string $imPath
+     */
+    public function setImPath($imPath)
+    {
+        $this->imPath = trim($imPath, '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCachePath()
+    {
+        return $this->getRootDir() . '/' . $this->getWebPath() . '/' . $this->getImPath();
     }
 
     /**
@@ -100,7 +148,7 @@ class Manager
      */
     public function cacheExists($format, $path)
     {
-        return (file_exists($this->cachePath . $format . '/' . $path) === true);
+        return (file_exists($this->getCachePath() . '/' . $format . '/' . $path) === true);
     }
 
     /**
@@ -113,7 +161,7 @@ class Manager
      */
     public function getCacheContent($format, $path)
     {
-        return file_get_contents($this->cachePath . $format . '/' . $path);
+        return file_get_contents($this->getCachePath(). '/' . $format . '/' . $path);
     }
 
     /**
@@ -126,7 +174,7 @@ class Manager
      */
     public function getUrl($format, $path)
     {
-        return $this->imPath . $format . '/' . $path;
+        return $this->getImPath() . '/' . $format . '/' . $path;
     }
 
     /**
@@ -140,9 +188,10 @@ class Manager
      */
     public function convert($format, $inputfile)
     {
+        $inputfile = ltrim($inputfile, '/');
         $this->checkImage($inputfile);
 
-        return $this->wrapper->run("convert", $this->webPath . $inputfile, $this->convertFormat($format), $this->cachePath . $this->pathify($format) . '/' . $inputfile);
+        return $this->wrapper->run("convert", $this->getWebPath() . $inputfile, $this->convertFormat($format), $this->getCachePath() . '/' . $this->pathify($format) . '/' . $inputfile);
     }
 
     /**
@@ -172,8 +221,8 @@ class Manager
      */
     public function downloadExternalImage($format, $path)
     {
-        $protocol = substr($path, 0, strpos($path, "/"));
-        $newPath = str_replace($protocol . "/", $this->kernel->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
+        $protocol = substr($path, 0, strpos($path, '/'));
+        $newPath = str_replace($protocol . '/', $this->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
 
         $this->wrapper->checkDirectory($newPath);
 
@@ -226,11 +275,11 @@ class Manager
      */
     private function checkImage($path)
     {
-        if (!file_exists($this->webPath . $path) && !file_exists($path)) {
+        if (!file_exists($this->getRootDir() . '/' . $this->getWebPath() . '/' . $path) && !file_exists($path)) {
             throw new NotFoundException(sprintf("Unable to find the image \"%s\" to cache", $path));
         }
 
-        if(!is_file($this->webPath . $path) && !is_file($path)) {
+        if(!is_file($this->getRootDir() . '/' . $this->getWebPath() . '/' . $path) && !is_file($path)) {
             throw new HttpException(400, sprintf('[ImBundle] "%s" is no file', $path));
         }
     }

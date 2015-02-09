@@ -29,6 +29,16 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
     private $rootDir;
 
     /**
+     * @var string
+     */
+    private $webPath;
+
+    /**
+     * @var string
+     */
+    private $imPath;
+
+    /**
      * @var  \org\bovigo\vfs\vfsStreamDirectory
      */
     private $root;
@@ -38,8 +48,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->rootDir = "vfs://app";
         $this->root = vfsStream::setup("/root");
+        $this->rootDir = "vfs://app";
+        $this->webPath = "../web";
+        $this->imPath = "cache/im";
     }
 
     /**
@@ -63,14 +75,15 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
 
 
         $wrapper = new Wrapper('\Snowcap\ImBundle\Tests\Mock\Process');
-        $manager = new Manager($wrapper, $kernel, $formats);
+        $manager = new Manager($wrapper, $kernel, $this->rootDir, $this->webPath, $this->imPath, $formats);
 
         $this->assertEquals($wrapper, $this->getManagerPrivateValue('wrapper', $manager));
         $this->assertEquals($kernel, $this->getManagerPrivateValue('kernel', $manager));
         $this->assertEquals($formats, $this->getManagerPrivateValue('formats', $manager));
-        $this->assertEquals($this->rootDir . '/../web/', $this->getManagerPrivateValue('webPath', $manager));
-        $this->assertEquals(Manager::DEFAULT_IM_PATH, $this->getManagerPrivateValue('imPath', $manager));
-        $this->assertEquals($this->rootDir . '/../web/' . Manager::DEFAULT_IM_PATH, $this->getManagerPrivateValue('cachePath', $manager));
+        $this->assertEquals($this->rootDir, $manager->getRootDir());
+        $this->assertEquals($this->webPath, $manager->getWebPath());
+        $this->assertEquals($this->imPath, $manager->getImPath());
+        $this->assertEquals($this->rootDir . '/'. trim($this->webPath, '/') . '/' . $this->imPath, $manager->getCachePath());
 
         return $manager;
     }
@@ -82,12 +95,12 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetCachePath(Manager $manager)
     {
-        $manager->setCachePath('somepath/');
+        $manager->setImPath('somepath');
 
-        $this->assertEquals('somepath/', $this->getManagerPrivateValue('imPath', $manager));
-        $this->assertEquals($this->rootDir . '/../web/somepath/', $this->getManagerPrivateValue('cachePath', $manager));
+        $this->assertEquals('somepath', $manager->getImPath());
+        $this->assertEquals($this->rootDir . '/../web/somepath', $manager->getCachePath());
 
-        $manager->setCachePath(Manager::DEFAULT_IM_PATH);
+        $manager->setImPath($this->imPath);
     }
 
     /**
@@ -151,10 +164,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
         $format = 'someformat';
         $path = 'somepath';
 
-        $this->assertEquals(Manager::DEFAULT_IM_PATH . $format . '/' . $path, $manager->getUrl($format, $path));
-        $manager->setCachePath('somepath/');
+        $this->assertEquals($this->imPath . '/' . $format . '/' . $path, $manager->getUrl($format, $path));
+        $manager->setImPath('somepath/');
         $this->assertEquals('somepath/' . $format . '/' . $path, $manager->getUrl($format, $path));
-        $manager->setCachePath(Manager::DEFAULT_IM_PATH);
+        $manager->setImPath($this->imPath);
     }
 
     /**
