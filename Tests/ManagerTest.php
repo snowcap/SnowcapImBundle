@@ -11,8 +11,6 @@
 
 namespace Snowcap\ImBundle\Tests;
 
-use Snowcap\ImBundle\Exception\InvalidArgumentException;
-use Snowcap\ImBundle\Exception\NotFoundException;
 use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Wrapper;
 
@@ -191,7 +189,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      * @param Manager $manager
      *
      * @depends test__construct
-     * @expectedException InvalidArgumentException
+     * @expectedException \Snowcap\ImBundle\Exception\InvalidArgumentException
      */
     public function testConvertFormatException(Manager $manager)
     {
@@ -231,7 +229,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      * @param Manager $manager
      *
      * @depends test__construct
-     * @expectedException NotFoundException
+     * @expectedException \Snowcap\ImBundle\Exception\NotFoundException
      */
     public function testCheckImageException(Manager $manager)
     {

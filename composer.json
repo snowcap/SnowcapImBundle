@@ -23,10 +23,10 @@
             "homepage": "http://www.snowcap.be"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": ">=2.2"
+        "symfony/framework-bundle": ">=2.2,<2.7"
     },
     "require-dev": {
         "symfony/symfony": ">=2.2",
