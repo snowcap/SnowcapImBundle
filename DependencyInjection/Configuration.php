@@ -24,17 +24,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    private $rootDir;
-
-    /**
-     * @param string $rootDir The root directory tof your web_path and im_path
-     */
-    function __construct($rootDir)
-    {
-        $this->rootDir = $rootDir;
-    }
-
-
     /**
      * {@inheritDoc}
      */
@@ -46,29 +35,25 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('binary_path')
-                    ->info('The path to Mogrify')
-                    ->example('/usr/bin/')
+                ->arrayNode('formats')
+                    ->useAttributeAsKey('key')
+                    ->prototype('variable')
                 ->end()
-                ->integerNode('timeout')
-                    ->info('Sets the process timeout (max. runtime).')
-                    ->defaultValue(60)
-                ->end()
-                ->scalarNode('root_dir')
-                    ->info('The root directory of your web_path and im_path.')
-                    ->defaultValue($this->rootDir)
+                ->scalarNode('cache_path')
+                    ->info('Relative path to the images cache folder (relative to web path).')
+                    ->defaultValue('cache/im/')
                 ->end()
                 ->scalarNode('web_path')
                     ->info('Relative path to the web folder (relative to root directory).')
                     ->defaultValue('../web/')
                 ->end()
-                ->scalarNode('im_path')
-                    ->info('Relative path to the images cache folder (relative to web path).')
-                    ->defaultValue('cache/im/')
+                ->integerNode('timeout')
+                    ->info('Sets the process timeout (max. runtime).')
+                    ->defaultValue(60)
                 ->end()
-                ->arrayNode('formats')
-                    ->useAttributeAsKey('key')
-                    ->prototype('variable')
+                ->scalarNode('binary_path')
+                    ->info('The path to Mogrify')
+                    ->example('/usr/bin/')
                 ->end()
             ->end();
 

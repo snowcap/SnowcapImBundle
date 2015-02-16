@@ -8,7 +8,7 @@ services:
         arguments: ['\Symfony\Component\Process\Process', %snowcap_im.binary_path%, %snowcap_im.timeout%]
     snowcap_im.manager:
         class: %snowcap_im.manager_class%
-        arguments: [@snowcap_im.wrapper, @kernel, %snowcap_im.root_dir%, %snowcap_im.web_path%, %snowcap_im.im_path%, %snowcap_im.formats%]
+        arguments: [@snowcap_im.wrapper, @kernel, %snowcap_im.web_path%, %snowcap_im.cache_path%, %snowcap_im.formats%]
 
     snowcap_im.twig:
         class: Snowcap\ImBundle\Twig\Extension\ImExtension

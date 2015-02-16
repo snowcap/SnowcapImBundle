@@ -51,24 +51,23 @@ class Manager
     /**
      * @var string
      */
-    protected $imPath;
+    protected $cachePath;
 
     /**
      * @param Wrapper $wrapper The ImBundle Wrapper instance
      * @param Kernel $kernel Symfony Kernel component instance
-     * @param string $rootDir The root directory of your web_path and im_path
      * @param string $webPath Relative path to the web folder (relative to root directory)
-     * @param string $imPath Relative path to the images cache folder (relative to web path)
+     * @param string $cachePath Relative path to the images cache folder (relative to web path)
      * @param array $formats Formats definition
      */
-    public function __construct(Wrapper $wrapper, Kernel $kernel, $rootDir, $webPath, $imPath, $formats = array())
+    public function __construct(Wrapper $wrapper, Kernel $kernel, $webPath, $cachePath, $formats = array())
     {
         $this->wrapper = $wrapper;
         $this->kernel = $kernel;
         $this->formats = $formats;
-        $this->setRootDir($rootDir);
+        $this->setRootDir($kernel->getRootDir());
         $this->setWebPath($webPath);
-        $this->setImPath($imPath);
+        $this->setCachePath($cachePath);
     }
 
     /**
@@ -117,25 +116,25 @@ class Manager
     /**
      * @return string
      */
-    public function getImPath()
+    public function getCachePath()
     {
-        return $this->imPath;
+        return $this->cachePath;
     }
 
     /**
-     * @param string $imPath
+     * @param string $cachePath
      */
-    public function setImPath($imPath)
+    public function setCachePath($cachePath)
     {
-        $this->imPath = trim($imPath, '/');
+        $this->cachePath = trim($cachePath, '/');
     }
 
     /**
      * @return string
      */
-    public function getCachePath()
+    public function getCacheDirectory()
     {
-        return $this->getRootDir() . '/' . $this->getWebPath() . '/' . $this->getImPath();
+        return $this->getRootDir() . '/' . $this->getWebPath() . '/' . $this->getCachePath();
     }
 
     /**
@@ -148,7 +147,7 @@ class Manager
      */
     public function cacheExists($format, $path)
     {
-        return (file_exists($this->getCachePath() . '/' . $format . '/' . $path) === true);
+        return (file_exists($this->getCacheDirectory() . '/' . $format . '/' . $path) === true);
     }
 
     /**
@@ -161,7 +160,7 @@ class Manager
      */
     public function getCacheContent($format, $path)
     {
-        return file_get_contents($this->getCachePath(). '/' . $format . '/' . $path);
+        return file_get_contents($this->getCacheDirectory(). '/' . $format . '/' . $path);
     }
 
     /**
@@ -174,7 +173,7 @@ class Manager
      */
     public function getUrl($format, $path)
     {
-        return $this->getImPath() . '/' . $format . '/' . $path;
+        return $this->getCachePath() . '/' . $format . '/' . $path;
     }
 
     /**
@@ -191,7 +190,7 @@ class Manager
         $inputfile = ltrim($inputfile, '/');
         $this->checkImage($inputfile);
 
-        return $this->wrapper->run("convert", $this->getWebPath() . $inputfile, $this->convertFormat($format), $this->getCachePath() . '/' . $this->pathify($format) . '/' . $inputfile);
+        return $this->wrapper->run("convert", $this->getWebPath() . $inputfile, $this->convertFormat($format), $this->getCacheDirectory() . '/' . $this->pathify($format) . '/' . $inputfile);
     }
 
     /**

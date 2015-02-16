@@ -30,26 +30,26 @@ class SnowcapImExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration($container->getParameter('kernel.root_dir'));
+        $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        if (isset($config['binary_path'])) {
-            $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
-        }
         if (isset($config['formats'])) {
             $container->setParameter('snowcap_im.formats', $config['formats']);
         }
-        if (isset($config['manager_class'])) {
-            $container->setParameter('snowcap_im.manager_class', $config['manager_class']);
+        if (isset($config['web_path'])) {
+            $container->setParameter('snowcap_im.web_path', $config['web_path']);
         }
-        if (isset($config['wrapper_class'])) {
-            $container->setParameter('snowcap_im.wrapper_class', $config['wrapper_class']);
+        if (isset($config['cache_path'])) {
+            $container->setParameter('snowcap_im.cache_path', $config['cache_path']);
         }
         if (isset($config['timeout'])) {
             $container->setParameter('snowcap_im.timeout', $config['timeout']);
+        }
+        if (isset($config['binary_path'])) {
+            $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
         }
     }
 }
