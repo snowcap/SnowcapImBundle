@@ -11,12 +11,12 @@
 
 namespace Snowcap\ImBundle\Tests;
 
+use Snowcap\ImBundle\Exception\InvalidArgumentException;
+use Snowcap\ImBundle\Exception\NotFoundException;
 use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Wrapper;
 
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamWrapper;
-use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 
 /**
  * Manager tester class
@@ -231,7 +231,7 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
      * @param Manager $manager
      *
      * @depends test__construct
-     * @expectedException Snowcap\ImBundle\Exception\NotFoundException
+     * @expectedException NotFoundException
      */
     public function testCheckImageException(Manager $manager)
     {
