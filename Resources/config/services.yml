@@ -1,12 +1,6 @@
 parameters:
-    snowcap_im.binary_path: ~
-    snowcap_im.formats: ~
     snowcap_im.wrapper_class: Snowcap\ImBundle\Wrapper
     snowcap_im.manager_class: Snowcap\ImBundle\Manager
-    snowcap_im.timeout: 60
-    snowcap_im.root_dir: %kernel.root_dir%
-    snowcap_im.web_path: ../web
-    snowcap_im.im_path: cache/im
 
 services:
     snowcap_im.wrapper:

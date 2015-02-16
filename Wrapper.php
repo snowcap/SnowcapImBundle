@@ -43,7 +43,7 @@ class Wrapper
     /**
      * @param string $processClass The class name of the command line processor
      * @param string $binaryPath   The path where the Imagemagick binaries lies
-     * @param int timeout The timeout in seconds
+     * @param int $timeout The timeout in seconds
      */
     public function __construct($processClass, $binaryPath = "", $timeout = 60)
     {
