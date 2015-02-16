@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('formats')
                     ->useAttributeAsKey('key')
-                    ->prototype('variable')
+                    ->prototype('variable')->end()
                 ->end()
                 ->scalarNode('cache_path')
                     ->info('Relative path to the images cache folder (relative to web path).')
@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('binary_path')
                     ->info('The path to Mogrify')
                     ->example('/usr/bin/')
+                    ->defaultNull()
                 ->end()
             ->end();
 

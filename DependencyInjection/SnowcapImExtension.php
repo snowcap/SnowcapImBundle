@@ -36,20 +36,10 @@ class SnowcapImExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        if (isset($config['formats'])) {
-            $container->setParameter('snowcap_im.formats', $config['formats']);
-        }
-        if (isset($config['web_path'])) {
-            $container->setParameter('snowcap_im.web_path', $config['web_path']);
-        }
-        if (isset($config['cache_path'])) {
-            $container->setParameter('snowcap_im.cache_path', $config['cache_path']);
-        }
-        if (isset($config['timeout'])) {
-            $container->setParameter('snowcap_im.timeout', $config['timeout']);
-        }
-        if (isset($config['binary_path'])) {
-            $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
-        }
+        $container->setParameter('snowcap_im.formats', $config['formats']);
+        $container->setParameter('snowcap_im.web_path', $config['web_path']);
+        $container->setParameter('snowcap_im.cache_path', $config['cache_path']);
+        $container->setParameter('snowcap_im.timeout', $config['timeout']);
+        $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
     }
 }
