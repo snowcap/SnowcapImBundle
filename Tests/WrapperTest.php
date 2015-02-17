@@ -14,6 +14,7 @@ namespace Snowcap\ImBundle\Tests;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
 
+use Snowcap\ImBundle\Exception\InvalidArgumentException;
 use Snowcap\ImBundle\Wrapper;
 
 /**

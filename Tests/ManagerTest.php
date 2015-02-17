@@ -61,22 +61,10 @@ class ManagerTest extends \PHPUnit_Framework_TestCase
             'list' => array('resize' => '100x100')
         );
 
-        $kernel = $this
-            ->getMockBuilder('Symfony\Component\HttpKernel\Kernel')
-            ->setConstructorArgs(array('test', false))
-            ->getMockForAbstractClass()
-        ;
-
-        $p = new \ReflectionProperty($kernel, 'rootDir');
-        $p->setAccessible(true);
-        $p->setValue($kernel, $this->rootDir);
-
-
         $wrapper = new Wrapper('\Snowcap\ImBundle\Tests\Mock\Process');
-        $manager = new Manager($wrapper, $kernel, $this->webPath, $this->cachePath, $formats);
+        $manager = new Manager($wrapper, $this->rootDir, $this->webPath, $this->cachePath, $formats);
 
         $this->assertEquals($wrapper, $this->getManagerPrivateValue('wrapper', $manager));
-        $this->assertEquals($kernel, $this->getManagerPrivateValue('kernel', $manager));
         $this->assertEquals($formats, $this->getManagerPrivateValue('formats', $manager));
         $this->assertEquals($this->rootDir, $manager->getRootDir());
         $this->assertEquals($this->webPath, $manager->getWebPath());

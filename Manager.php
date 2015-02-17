@@ -12,8 +12,6 @@
 namespace Snowcap\ImBundle;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Kernel;
-use Snowcap\ImBundle\Wrapper;
 
 use Snowcap\ImBundle\Exception\NotFoundException;
 use Snowcap\ImBundle\Exception\InvalidArgumentException;
@@ -27,11 +25,6 @@ class Manager
      * @var Wrapper
      */
     protected $wrapper;
-
-    /**
-     * @var \Symfony\Component\HttpKernel\Kernel
-     */
-    protected $kernel;
 
     /**
      * @var array
@@ -55,17 +48,16 @@ class Manager
 
     /**
      * @param Wrapper $wrapper The ImBundle Wrapper instance
-     * @param Kernel $kernel Symfony Kernel component instance
+     * @param string $rootDir Symfony Kernel root directory
      * @param string $webPath Relative path to the web folder (relative to root directory)
      * @param string $cachePath Relative path to the images cache folder (relative to web path)
      * @param array $formats Formats definition
      */
-    public function __construct(Wrapper $wrapper, Kernel $kernel, $webPath, $cachePath, $formats = array())
+    public function __construct(Wrapper $wrapper, $rootDir, $webPath, $cachePath, $formats = array())
     {
         $this->wrapper = $wrapper;
-        $this->kernel = $kernel;
         $this->formats = $formats;
-        $this->setRootDir($kernel->getRootDir());
+        $this->setRootDir($rootDir);
         $this->setWebPath($webPath);
         $this->setCachePath($cachePath);
     }
@@ -149,7 +141,7 @@ class Manager
      * To know if a cache exist for a image in a format
      *
      * @param string $format ImBundle format string
-     * @param string $path   Source file path
+     * @param string $path Source file path
      *
      * @return bool
      */
@@ -162,20 +154,20 @@ class Manager
      * To get a cached image content
      *
      * @param string $format ImBundle format string
-     * @param string $path   Source file path
+     * @param string $path Source file path
      *
      * @return string
      */
     public function getCacheContent($format, $path)
     {
-        return file_get_contents($this->getCacheDirectory(). '/' . $format . '/' . $path);
+        return file_get_contents($this->getCacheDirectory() . '/' . $format . '/' . $path);
     }
 
     /**
      * To get the web path for a format
      *
      * @param string $format ImBundle format string
-     * @param string $path   Source file path
+     * @param string $path Source file path
      *
      * @return string
      */
@@ -187,25 +179,25 @@ class Manager
     /**
      * Shortcut to run a "convert" command => creates a new image
      *
-     * @param string $format    ImBundle format string
-     * @param string $inputfile Source file path
+     * @param string $format ImBundle format string
+     * @param string $file Source file path
      *
      * @return string
      * @codeCoverageIgnore
      */
-    public function convert($format, $inputfile)
+    public function convert($format, $file)
     {
-        $inputfile = ltrim($inputfile, '/');
-        $this->checkImage($inputfile);
+        $file = ltrim($file, '/');
+        $this->checkImage($file);
 
-        return $this->wrapper->run("convert", $this->getWebDirectory() . '/' . $inputfile, $this->convertFormat($format), $this->getCacheDirectory() . '/' . $this->pathify($format) . '/' . $inputfile);
+        return $this->wrapper->run("convert", $this->getWebDirectory() . '/' . $file, $this->convertFormat($format), $this->getCacheDirectory() . '/' . $this->pathify($format) . '/' . $file);
     }
 
     /**
      * Shortcut to run a "mogrify" command => modifies the image source
      *
      * @param string $format ImBundle format string
-     * @param string $file   Source file path
+     * @param string $file Source file path
      *
      * @return string
      * @codeCoverageIgnore
@@ -219,7 +211,7 @@ class Manager
 
     /**
      * @param string $format ImBundle format string
-     * @param string $path   cached path for an external image - ex: http/somepath/somefile.jpg or https/somepath/someotherfile.jpg
+     * @param string $path cached path for an external image - ex: http/somepath/somefile.jpg or https/somepath/someotherfile.jpg
      *
      * The cached path is equivalent to the original path except that the '://' syntax after the protocol is replaced by a simple "/", to conserve a correct URL encoded string
      * The Twig tag 'imResize' will automatically make this conversion for you
@@ -286,7 +278,7 @@ class Manager
             throw new NotFoundException(sprintf("Unable to find the image \"%s\" to cache", $path));
         }
 
-        if(!is_file($this->getWebDirectory() . '/' . $path) && !is_file($path)) {
+        if (!is_file($this->getWebDirectory() . '/' . $path) && !is_file($path)) {
             throw new HttpException(400, sprintf('[ImBundle] "%s" is no file', $path));
         }
     }
