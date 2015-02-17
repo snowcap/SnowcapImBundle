@@ -12,7 +12,7 @@ services:
 
     snowcap_im.twig:
         class: Snowcap\ImBundle\Twig\Extension\ImExtension
-        arguments: [@service_container]
+        arguments: [@snowcap_im.manager]
         tags:
             -  { name: twig.extension }
 

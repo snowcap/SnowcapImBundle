@@ -15,7 +15,6 @@ use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Twig\TokenParser\Imresize as Twig_TokenParser_Imresize;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Templating\Helper\AssetsHelper;
 
 /**
  * Registering twig extensions
@@ -23,22 +22,17 @@ use Symfony\Component\Templating\Helper\AssetsHelper;
 class ImExtension extends \Twig_Extension
 {
     /**
-     * @var AssetsHelper
-     */
-    private $assetsHelper;
-    /**
-     * @var Manager
+     * @var ContainerInterface
      */
     private $manager;
 
     /**
-     * @param ContainerInterface $container
+     * @param Manager $manager
      * @codeCoverageIgnore
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Manager $manager)
     {
-        $this->assetsHelper = $container->get('templating.helper.assets');
-        $this->manager = $container->get('snowcap_im.manager');
+        $this->manager = $manager;
     }
 
     /**
@@ -122,7 +116,7 @@ class ImExtension extends \Twig_Extension
 
         $path = ltrim($path, '/');
 
-        return $this->assetsHelper->getUrl($this->manager->getCachePath() . '/' . $format . '/' . $path);
+        return $this->manager->getCachePath() . '/' . $format . '/' . $path;
     }
 
     /**

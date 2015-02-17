@@ -14,7 +14,6 @@ namespace Snowcap\ImBundle\Tests\Twig\Extension;
 use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Twig\Extension\ImExtension;
 use Snowcap\ImBundle\Wrapper;
-use Symfony\Component\Templating\Helper\AssetsHelper;
 
 /**
  * Wrapper tester class
@@ -26,16 +25,7 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $container
-            ->expects($this->at(0))->method('get')
-            ->with($this->equalTo('templating.helper.assets'))
-            ->will($this->returnValue(new AssetsHelper()));
-        $container
-            ->expects($this->at(1))->method('get')
-            ->with($this->equalTo('snowcap_im.manager'))
-            ->will($this->returnValue(new Manager(new Wrapper('\Symfony\Component\Process\Process'), 'app/', '../web/', 'cache/im')));
-        $this->imExtension = new ImExtension($container);
+        $this->imExtension = new ImExtension(new Manager(new Wrapper('\Symfony\Component\Process\Process'), 'app/', '../web/', 'cache/im'));
     }
 
     /**
@@ -59,14 +49,14 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
             array('<img src="img.jpg"/>', '<img src="img.jpg"/>'),
             array('hop <img src="img.jpg" />hop', 'hop <img src="img.jpg" />hop'),
             array('hop <img src="img.jpg" width=""/>hop', 'hop <img src="img.jpg" width=""/>hop'),
-            array('hop <img src="img.jpg" width="100" />hop', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop'),
-            array('hop <img src="path/img.jpg" height="120"/>hop', 'hop <img src="/cache/im/x120/path/img.jpg" height="120"/>hop'),
-            array('hop <img src="path/img.jpg" width="100" height="120" />hop', 'hop <img src="/cache/im/100x120/path/img.jpg" width="100" height="120" />hop'),
-            array('hop <img height="100" src="path/img.jpg"  width="120" data="content" />hop', 'hop <img height="100" src="/cache/im/120x100/path/img.jpg"  width="120" data="content" />hop'),
-            array('hop <img height="100" src="path/img.jpg"  width="120" data="path/img.jpg" />hop', 'hop <img height="100" src="/cache/im/120x100/path/img.jpg"  width="120" data="path/img.jpg" />hop'),
-            array('hop <img src="img.jpg" width="100" />hop <img src="img2.jpg" width="100" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/100x/img2.jpg" width="100" /> hip'),
-            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="120" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/120x/img.jpg" width="120" /> hip'),
-            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="100" /> hip', 'hop <img src="/cache/im/100x/img.jpg" width="100" />hop <img src="/cache/im/100x/img.jpg" width="100" /> hip'),
+            array('hop <img src="img.jpg" width="100" />hop', 'hop <img src="cache/im/100x/img.jpg" width="100" />hop'),
+            array('hop <img src="path/img.jpg" height="120"/>hop', 'hop <img src="cache/im/x120/path/img.jpg" height="120"/>hop'),
+            array('hop <img src="path/img.jpg" width="100" height="120" />hop', 'hop <img src="cache/im/100x120/path/img.jpg" width="100" height="120" />hop'),
+            array('hop <img height="100" src="path/img.jpg"  width="120" data="content" />hop', 'hop <img height="100" src="cache/im/120x100/path/img.jpg"  width="120" data="content" />hop'),
+            array('hop <img height="100" src="path/img.jpg"  width="120" data="path/img.jpg" />hop', 'hop <img height="100" src="cache/im/120x100/path/img.jpg"  width="120" data="path/img.jpg" />hop'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img2.jpg" width="100" /> hip', 'hop <img src="cache/im/100x/img.jpg" width="100" />hop <img src="cache/im/100x/img2.jpg" width="100" /> hip'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="120" /> hip', 'hop <img src="cache/im/100x/img.jpg" width="100" />hop <img src="cache/im/120x/img.jpg" width="120" /> hip'),
+            array('hop <img src="img.jpg" width="100" />hop <img src="img.jpg" width="100" /> hip', 'hop <img src="cache/im/100x/img.jpg" width="100" />hop <img src="cache/im/100x/img.jpg" width="100" /> hip'),
         );
     }
 
@@ -88,15 +78,15 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
     public function providerImResize()
     {
         return array(
-            array('img.jpg', '100x', '/cache/im/100x/img.jpg'),
-            array('img.png', '100x', '/cache/im/100x/img.png'),
-            array('img.gif', '100x', '/cache/im/100x/img.gif'),
-            array('img.tiff', 'x100', '/cache/im/x100/img.tiff'),
-            array('/img.jpg', 'x100', '/cache/im/x100/img.jpg'),
-            array('path/img.jpg', 'x100', '/cache/im/x100/path/img.jpg'),
-            array('path/img.jpg', '120x100', '/cache/im/120x100/path/img.jpg'),
-            array('http://domain.tld/path/img.jpg', '120x100', '/cache/im/120x100/http/domain.tld/path/img.jpg'),
-            array('https://domain.tld/path/img.jpg', '120x100', '/cache/im/120x100/https/domain.tld/path/img.jpg'),
+            array('img.jpg', '100x', 'cache/im/100x/img.jpg'),
+            array('img.png', '100x', 'cache/im/100x/img.png'),
+            array('img.gif', '100x', 'cache/im/100x/img.gif'),
+            array('img.tiff', 'x100', 'cache/im/x100/img.tiff'),
+            array('/img.jpg', 'x100', 'cache/im/x100/img.jpg'),
+            array('path/img.jpg', 'x100', 'cache/im/x100/path/img.jpg'),
+            array('path/img.jpg', '120x100', 'cache/im/120x100/path/img.jpg'),
+            array('http://domain.tld/path/img.jpg', '120x100', 'cache/im/120x100/http/domain.tld/path/img.jpg'),
+            array('https://domain.tld/path/img.jpg', '120x100', 'cache/im/120x100/https/domain.tld/path/img.jpg'),
         );
     }
 }
