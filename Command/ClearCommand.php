@@ -34,9 +34,7 @@ class ClearCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $kernel \Symfony\Component\HttpKernel\Kernel */
-        $kernel = $this->getContainer()->get('kernel');
-        $cacheDir = $kernel->getRootDir() . '/../web/cache/im/';
+        $cacheDir = $this->getContainer()->get('snowcap_im.manager')->getCacheDirectory();
 
         /** @var $filesystem \Symfony\Component\Filesystem\Filesystem */
         $filesystem = $this->getContainer()->get('filesystem');

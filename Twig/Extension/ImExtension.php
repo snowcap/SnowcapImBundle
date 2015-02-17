@@ -11,25 +11,34 @@
 
 namespace Snowcap\ImBundle\Twig\Extension;
 
+use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Twig\TokenParser\Imresize as Twig_TokenParser_Imresize;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Templating\Helper\AssetsHelper;
 
 /**
  * Registering twig extensions
  */
 class ImExtension extends \Twig_Extension
 {
-    private $container;
+    /**
+     * @var AssetsHelper
+     */
+    private $assetsHelper;
+    /**
+     * @var Manager
+     */
+    private $manager;
 
     /**
      * @param ContainerInterface $container
-     *
      * @codeCoverageIgnore
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        $this->assetsHelper = $container->get('templating.helper.assets');
+        $this->manager = $container->get('snowcap_im.manager');
     }
 
     /**
@@ -106,17 +115,14 @@ class ImExtension extends \Twig_Extension
      */
     public function imResize($path, $format)
     {
+        $path = trim($path);
         if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
             $path = str_replace("://", "/", $path);
         }
 
-        if (strpos($path, "/") === 0) {
-            $separator = "";
-        } else {
-            $separator = "/";
-        }
+        $path = ltrim($path, '/');
 
-        return $this->container->get('templating.helper.assets')->getUrl("cache/im/" . $format . $separator . trim($path));
+        return $this->assetsHelper->getUrl($this->manager->getCachePath() . '/' . $format . '/' . $path);
     }
 
     /**

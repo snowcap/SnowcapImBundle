@@ -229,7 +229,7 @@ class Manager
     public function downloadExternalImage($format, $path)
     {
         $protocol = substr($path, 0, strpos($path, '/'));
-        $newPath = str_replace($protocol . '/', $this->getRootDir() . '/../web/cache/im/' . $format . '/' . $protocol . '/', $path);
+        $newPath = str_replace($protocol . '/', $this->getCacheDirectory() . '/' . $format . '/' . $protocol . '/', $path);
 
         $this->wrapper->checkDirectory($newPath);
 
