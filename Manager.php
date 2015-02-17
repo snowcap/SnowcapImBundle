@@ -116,6 +116,14 @@ class Manager
     /**
      * @return string
      */
+    public function getWebDirectory()
+    {
+        return $this->getRootDir() . '/' . $this->getWebPath();
+    }
+
+    /**
+     * @return string
+     */
     public function getCachePath()
     {
         return $this->cachePath;
@@ -190,7 +198,7 @@ class Manager
         $inputfile = ltrim($inputfile, '/');
         $this->checkImage($inputfile);
 
-        return $this->wrapper->run("convert", $this->getWebPath() . $inputfile, $this->convertFormat($format), $this->getCacheDirectory() . '/' . $this->pathify($format) . '/' . $inputfile);
+        return $this->wrapper->run("convert", $this->getWebDirectory() . '/' . $inputfile, $this->convertFormat($format), $this->getCacheDirectory() . '/' . $this->pathify($format) . '/' . $inputfile);
     }
 
     /**
@@ -274,11 +282,11 @@ class Manager
      */
     private function checkImage($path)
     {
-        if (!file_exists($this->getRootDir() . '/' . $this->getWebPath() . '/' . $path) && !file_exists($path)) {
+        if (!file_exists($this->getWebDirectory() . '/' . $path) && !file_exists($path)) {
             throw new NotFoundException(sprintf("Unable to find the image \"%s\" to cache", $path));
         }
 
-        if(!is_file($this->getRootDir() . '/' . $this->getWebPath() . '/' . $path) && !is_file($path)) {
+        if(!is_file($this->getWebDirectory() . '/' . $path) && !is_file($path)) {
             throw new HttpException(400, sprintf('[ImBundle] "%s" is no file', $path));
         }
     }
