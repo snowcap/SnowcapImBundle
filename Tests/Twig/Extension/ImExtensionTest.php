@@ -14,6 +14,7 @@ namespace Snowcap\ImBundle\Tests\Twig\Extension;
 use Snowcap\ImBundle\Manager;
 use Snowcap\ImBundle\Twig\Extension\ImExtension;
 use Snowcap\ImBundle\Wrapper;
+use Symfony\Component\Templating\Helper\AssetsHelper;
 
 /**
  * Wrapper tester class
@@ -29,7 +30,7 @@ class ImExtensionTest extends \PHPUnit_Framework_TestCase
         $container
             ->expects($this->at(0))->method('get')
             ->with($this->equalTo('templating.helper.assets'))
-            ->will($this->returnValue(new \Symfony\Component\Templating\Helper\AssetsHelper()));
+            ->will($this->returnValue(new AssetsHelper()));
         $container
             ->expects($this->at(1))->method('get')
             ->with($this->equalTo('snowcap_im.manager'))
