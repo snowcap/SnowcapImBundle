@@ -109,14 +109,22 @@ class ImExtension extends \Twig_Extension
      */
     public function imResize($path, $format)
     {
+        // Remove extra whitespaces
         $path = trim($path);
-        if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0) {
-            $path = str_replace("://", "/", $path);
+
+        $separator = "";
+        // Transform absolute url to custom url like : http/ or https/ or simply /
+        if (strpos($path, "http://") === 0 || strpos($path, "https://") === 0 || strpos($path, "//") === 0) {
+            $path = str_replace(array("://", "//"), "/", $path);
+        } elseif (strpos($path, "/") === 0) {
+            // If the path started with a slash, we will add it at the start of the path result
+            $separator = "/";
         }
 
+        // Remove the first slash, as we add it manually
         $path = ltrim($path, '/');
 
-        return $this->manager->getCachePath() . '/' . $format . '/' . $path;
+        return $separator . $this->manager->getCachePath() . '/' . $format . '/' . $path;
     }
 
     /**
