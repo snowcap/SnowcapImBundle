@@ -42,7 +42,7 @@
     "target-dir": "Snowcap/ImBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3.x-dev"
+            "dev-master": "1.0.x-dev"
         }
     }
 }
