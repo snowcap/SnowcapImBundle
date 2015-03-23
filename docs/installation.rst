@@ -14,7 +14,7 @@ Add the bundle in your project
 
   {
       "require": {
-          "snowcap/im-bundle": "dev-master"
+          "snowcap/im-bundle": "~1.0"
       }
   }
 
