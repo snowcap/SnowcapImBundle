@@ -10,11 +10,11 @@ app/config.yml
     # the directory where your imagemagick binaries are (optional). Default: /usr/bin/
     binary_path: '/opt/local/bin/'
 
-    # the public directory of your web application relative to the kernel root_path (optional). Default: ../web/
-    web_path: '../public/'
+    # the public directory of your web application relative to the kernel root_path (optional). Default: ../web
+    web_path: '../public'
 
-    # the directory where the cached image are stored from your public directory (optional). Default: cache/im/
-    cache_path: 'images/cache/'
+    # the directory where the cached image are stored from your public directory (optional). Default: cache/im
+    cache_path: 'images/cache'
 
     # the timeout in seconds for the imagemagick process (optional). Default: 60
     timeout: 300
