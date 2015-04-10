@@ -30,6 +30,7 @@
     },
     "require-dev": {
         "symfony/symfony": ">=2.2",
+        "doctrine/orm": "~2.5",
         "mikey179/vfsStream": "v1.0.0",
         "phpunit/phpunit": "~4.7@dev"
     },

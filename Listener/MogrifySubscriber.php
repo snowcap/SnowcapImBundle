@@ -11,12 +11,14 @@
 
 namespace Snowcap\ImBundle\Listener;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Snowcap\ImBundle\Manager as ImManager;
 
-use Doctrine\ORM\Event\PreFlushEventArgs;
 
 /**
  * Event listener for Doctrine entities to evualuate and execute ImBundle annotations
@@ -60,22 +62,25 @@ class MogrifySubscriber implements EventSubscriber
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
-        $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+        $reader = new AnnotationReader();
         $meta = $eventArgs->getClassMetadata();
-        foreach ($meta->getReflectionClass()->getProperties() as $property) {
-            if ($meta->isMappedSuperclass && !$property->isPrivate() ||
-                $meta->isInheritedField($property->name) ||
-                isset($meta->associationMappings[$property->name]['inherited'])
-            ) {
-                continue;
-            }
-            /** @var $annotation \Snowcap\ImBundle\Doctrine\Mapping\Mogrify */
-            if ($annotation = $reader->getPropertyAnnotation($property, 'Snowcap\\ImBundle\\Doctrine\\Mapping\\Mogrify')) {
-                $field = $property->getName();
-                $this->config[$meta->getTableName()]['fields'][$field] = array(
-                    'property' => $property,
-                    'params'   => $annotation->params,
-                );
+        $reflexionClass = $meta->getReflectionClass();
+        if (null !== $reflexionClass) {
+            foreach ($reflexionClass->getProperties() as $property) {
+                if ($meta->isMappedSuperclass && !$property->isPrivate() ||
+                    $meta->isInheritedField($property->name) ||
+                    isset($meta->associationMappings[$property->name]['inherited'])
+                ) {
+                    continue;
+                }
+                /** @var $annotation \Snowcap\ImBundle\Doctrine\Mapping\Mogrify */
+                if ($annotation = $reader->getPropertyAnnotation($property, 'Snowcap\\ImBundle\\Doctrine\\Mapping\\Mogrify')) {
+                    $field = $property->getName();
+                    $this->config[$meta->getTableName()]['fields'][$field] = array(
+                        'property' => $property,
+                        'params'   => $annotation->params,
+                    );
+                }
             }
         }
     }
@@ -85,10 +90,8 @@ class MogrifySubscriber implements EventSubscriber
      */
     public function preFlush(PreFlushEventArgs $ea)
     {
-        /** @var $entityManager \Doctrine\ORM\EntityManager */
         $entityManager = $ea->getEntityManager();
 
-        /** @var $unitOfWork \Doctrine\ORM\UnitOfWork */
         $unitOfWork = $entityManager->getUnitOfWork();
 
         $entityMaps = $unitOfWork->getIdentityMap();
@@ -112,7 +115,12 @@ class MogrifySubscriber implements EventSubscriber
         }
     }
 
-    private function getFiles($entity, \Doctrine\ORM\EntityManager $entityManager)
+    /**
+     * @param $entity
+     * @param EntityManager $entityManager
+     * @return array
+     */
+    private function getFiles($entity, EntityManager $entityManager)
     {
         $classMetaData = $entityManager->getClassMetaData(get_class($entity));
         $tableName = $classMetaData->getTableName();
@@ -124,6 +132,10 @@ class MogrifySubscriber implements EventSubscriber
         }
     }
 
+    /**
+     * @param $entity
+     * @param $file
+     */
     private function mogrify($entity, $file)
     {
         $propertyName = $file['property']->name;
@@ -136,14 +148,5 @@ class MogrifySubscriber implements EventSubscriber
                 $this->imManager->mogrify($file['params'], $uploadedFile->getPathName());
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getUploadRootDir()
-    {
-        // the absolute directory path where uploaded documents should be saved
-        return $this->rootDir . '/../web/';
     }
 }
