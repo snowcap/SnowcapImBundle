@@ -26,7 +26,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": ">=2.2,<2.7"
+        "symfony/framework-bundle": ">=2.2"
     },
     "require-dev": {
         "symfony/symfony": ">=2.2",
@@ -42,7 +42,7 @@
     "target-dir": "Snowcap/ImBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     }
 }
