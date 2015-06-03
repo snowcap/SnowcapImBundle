@@ -11,10 +11,10 @@
 
 namespace Snowcap\ImBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-
 use Snowcap\ImBundle\Exception\RuntimeException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controls calls to resized images
@@ -24,13 +24,13 @@ class DefaultController extends Controller
     /**
      * Main action: renders the image cache and returns it to the browser
      *
+     * @param Request $request
      * @param string $format A format name defined in config or a string [width]x[height]
-     * @param string $path   The path of the source file (@see Manager::downloadExternalImage for more info on external/remote images)
+     * @param string $path The path of the source file (@see Manager::downloadExternalImage for more info on external/remote images)
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Snowcap\ImBundle\Exception\RuntimeException
+     * @return Response
      */
-    public function indexAction($format, $path)
+    public function indexAction(Request $request, $format, $path)
     {
         /** @var $im \Snowcap\ImBundle\Manager */
         $im = $this->get("snowcap_im.manager");
@@ -46,7 +46,7 @@ class DefaultController extends Controller
             throw new RuntimeException(sprintf("Caching of image failed for %s in %s format", $path, $format));
         } else {
             $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $contentType = $this->getRequest()->getMimeType($extension);
+            $contentType = $request->getMimeType($extension);
             if (empty($contentType)) {
                 $contentType = 'image/' . $extension;
             }
