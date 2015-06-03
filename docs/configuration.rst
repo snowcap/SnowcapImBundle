@@ -1,7 +1,7 @@
 Configuration
 =============
 
-app/config.yml
+app/config/config.yml
 
 .. code-block:: yaml
 
