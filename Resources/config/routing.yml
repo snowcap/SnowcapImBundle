@@ -1,5 +1,5 @@
 snowcap_im_default_index:
-    pattern: %snowcap_im.cache_path%/{format}/{path}
+    path: %snowcap_im.cache_path%/{format}/{path}
     requirements:
-      path: (.+)
+        path: (.+)
     defaults: { _controller: SnowcapImBundle:Default:index }
