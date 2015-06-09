@@ -10,11 +10,25 @@ Requirements
 Add the bundle in your project
 ------------------------------
 
+For Symfony < 2.7
+~~~~~~~~~~~~~~~~~
+
 .. code-block:: json
 
   {
       "require": {
           "snowcap/im-bundle": "~1.0"
+      }
+  }
+
+For Symfony >= 2.7
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: json
+
+  {
+      "require": {
+          "snowcap/im-bundle": "~2.0"
       }
   }
 
