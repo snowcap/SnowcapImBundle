@@ -31,7 +31,8 @@
     "require-dev": {
         "symfony/symfony": ">=2.7",
         "mikey179/vfsStream": "v1.0.0",
-        "phpunit/phpunit": "~4.7@dev"
+        "phpunit/phpunit": "^4.8",
+        "symfony/phpunit-bridge": "^2.7"
     },
     "suggest": {
         "snowcap/core-bundle": "ImBundle provides a form type extension for the Snowcap CoreBundle ImageType"
