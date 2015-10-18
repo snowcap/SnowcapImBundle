@@ -274,8 +274,11 @@ class Manager
      */
     private function checkImage($path)
     {
+        if(strpos($path, ':') !== false) {
+            $path = explode(':', $path)[1];
+        }
         if (!file_exists($this->getWebDirectory() . '/' . $path) && !file_exists($path)) {
-            throw new NotFoundException(sprintf("Unable to find the image \"%s\" to cache", $path));
+            throw new NotFoundException(sprintf("Unable to find image \"%s\"", $path));
         }
 
         if (!is_file($this->getWebDirectory() . '/' . $path) && !is_file($path)) {
