@@ -50,7 +50,7 @@ From a controller
 In entities (annotations)
 -----------
 
-If you need to alter an uploaded image, you can add annotations on the file public property from your entity
+If you need to alter an uploaded image, you can add annotations on the public file property from your entity
 
 .. code-block:: php
 
@@ -86,7 +86,7 @@ If you want to create a thumbnail while keeping the original, you can use the *t
     /**
      *
      * @Assert\File(maxSize="6000000")
-     * @SnowcapIm\Convert(params={"thumbnail"="100x100>", targetProperty="thumbnail"})
+     * @SnowcapIm\Convert(params={"thumbnail"="100x100>"}, targetProperty="thumbnail")
      */
     public $file;
 
@@ -108,10 +108,11 @@ To resize the original not to be any wider than 1024 and create say a medium siz
     /**
      *
      * @Assert\File(maxSize="6000000")
-     * @SnowcapIm\ConvertMultiple(
-     *     @SnowcapIm\Convert(params={"thumbnail"="1024"),
-     *     @SnowcapIm\Convert(params={"thumbnail"="612", targetProperty="medium"}),
-     *     @SnowcapIm\Convert(params={"thumbnail"="100x100>", targetProperty="thumbnail"})
+     * @SnowcapIm\ConvertMultiple({
+     *     @SnowcapIm\Convert(params={"resize"="1024"}),
+     *     @SnowcapIm\Convert(params={"resize"="612"}, targetProperty="medium"),
+     *     @SnowcapIm\Convert(params={"thumbnail"="100x100>"}, targetProperty="thumbnail")
+     * })
      */
     public $file;
 
