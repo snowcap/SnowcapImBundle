@@ -274,9 +274,12 @@ class Manager
      */
     private function checkImage($path)
     {
+        // remove explicit format if present
         if(strpos($path, ':') !== false) {
-            $path = explode(':', $path)[1];
+            $path = explode(':', $path);
+            $path = $path[1];
         }
+
         if (!file_exists($this->getWebDirectory() . '/' . $path) && !file_exists($path)) {
             throw new NotFoundException(sprintf("Unable to find image \"%s\"", $path));
         }
