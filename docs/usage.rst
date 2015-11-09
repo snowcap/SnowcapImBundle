@@ -47,7 +47,7 @@ From a controller
   // to resize the source file
   $im->mogrify($format, $path);
 
-In entities
+In entities (annotations)
 -----------
 
 If you need to alter an uploaded image, you can add annotations on the file public property from your entity
@@ -71,6 +71,53 @@ The *params* attribute can contain
 
 * an array of ImageMagick key/values (like the example above)
 * a format predefined in config
+
+Keep original
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to create a thumbnail while keeping the original, you can use the *targetProperty* attribute
+
+.. code-block:: php
+
+  // ...
+  use Snowcap\ImBundle\Doctrine\Mapping as SnowcapIm;
+  // ...
+
+    /**
+     *
+     * @Assert\File(maxSize="6000000")
+     * @SnowcapIm\Convert(params={"thumbnail"="100x100>", targetProperty="thumbnail"})
+     */
+    public $file;
+
+    public $thumbnail;
+
+Just like for the Mogrify annotation, you can then use the $file->move() method like usual.
+
+Multiple resizes
+~~~~~~~~~~~~~~~~~~~~~~
+
+To resize the original not to be any wider than 1024 and create say a medium sized version at a width of 612 and a thumbnail at 100x100, you can use the ConvertMultiple annotation
+
+.. code-block:: php
+
+  // ...
+  use Snowcap\ImBundle\Doctrine\Mapping as SnowcapIm;
+  // ...
+
+    /**
+     *
+     * @Assert\File(maxSize="6000000")
+     * @SnowcapIm\ConvertMultiple(
+     *     @SnowcapIm\Convert(params={"thumbnail"="1024"),
+     *     @SnowcapIm\Convert(params={"thumbnail"="612>", targetProperty="medium"}),
+     *     @SnowcapIm\Convert(params={"thumbnail"="100x100>", targetProperty="thumbnail"})
+     */
+    public $file;
+
+    public $medium;
+
+    public $thumbnail;
 
 Clearing the cache
 ------------------
