@@ -92,12 +92,12 @@ If you want to create a thumbnail while keeping the original, you can use the *t
 
     public $thumbnail;
 
-Just like for the Mogrify annotation, you can then use the $file->move() method like usual.
+Just like for the *Mogrify* annotation, you can then use the $file->move() method like usual.
 
 Multiple resizes
 ~~~~~~~~~~~~~~~~~~~~~~
 
-To resize the original not to be any wider than 1024 and create say a medium sized version at a width of 612 and a thumbnail at 100x100, you can use the ConvertMultiple annotation
+To resize the original not to be any wider than 1024 and create say a medium sized version at a width of 612 and a thumbnail at 100x100, you can use the *ConvertMultiple* annotation
 
 .. code-block:: php
 
@@ -110,7 +110,7 @@ To resize the original not to be any wider than 1024 and create say a medium siz
      * @Assert\File(maxSize="6000000")
      * @SnowcapIm\ConvertMultiple(
      *     @SnowcapIm\Convert(params={"thumbnail"="1024"),
-     *     @SnowcapIm\Convert(params={"thumbnail"="612>", targetProperty="medium"}),
+     *     @SnowcapIm\Convert(params={"thumbnail"="612", targetProperty="medium"}),
      *     @SnowcapIm\Convert(params={"thumbnail"="100x100>", targetProperty="thumbnail"})
      */
     public $file;
