@@ -275,8 +275,8 @@ class Manager
     private function checkImage($path)
     {
         // remove explicit format if present
-        if(strpos($path, ':') !== false) {
-            $path = explode(':', $path);
+        if(preg_match("/:(?!\/\/)/", $path) === 1) {
+            $path = preg_split("/:(?!\/\/)/", $path);
             $path = $path[1];
         }
 
