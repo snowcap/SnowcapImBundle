@@ -11,15 +11,13 @@
 
 namespace Snowcap\ImBundle\Listener;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LoadClassMetadataEventArgs;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreFlushEventArgs;
-use Snowcap\ImBundle\Manager as ImManager;
-
 use Metadata\MetadataFactoryInterface;
+use Snowcap\ImBundle\Manager as ImManager;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Event listener for Doctrine entities to evualuate and execute ImBundle annotations
@@ -44,6 +42,11 @@ class MogrifySubscriber implements EventSubscriber
     private $imManager;
 
     /**
+     * @var \Symfony\Component\PropertyAccess\PropertyAccessor
+     */
+    private $propertyAccessor;
+
+    /**
      * @param string                    $rootDir            The dir to generate files
      * @param MetadataFactoryInterface  $metadataFactory
      * @param ImManager                 $imManager          The ImBundle manager instance
@@ -53,6 +56,7 @@ class MogrifySubscriber implements EventSubscriber
         $this->rootDir = $rootDir;
         $this->metadataFactory = $metadataFactory;
         $this->imManager = $imManager;
+        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
     /**
@@ -99,15 +103,9 @@ class MogrifySubscriber implements EventSubscriber
      */
     private function mogrify($entity, $file)
     {
-        $propertyName = $file->name;
-
-        $getter = 'get' . ucFirst($propertyName);
-        if (method_exists($entity, $getter)) {
-            /** @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
-            $uploadedFile = $entity->$getter();
-            if (null !== $uploadedFile) {
-                $this->imManager->mogrify($file->params, $uploadedFile->getPathName());
-            }
+        $uploadedFile = $this->propertyAccessor->getValue($entity, $file->name);
+        if ($uploadedFile instanceof UploadedFile) {
+            $this->imManager->mogrify($file->params, $uploadedFile->getPathName());
         }
     }
 }
