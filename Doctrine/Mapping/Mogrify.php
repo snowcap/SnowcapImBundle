@@ -17,10 +17,16 @@ use Doctrine\Common\Annotations\Annotation;
  * Annotation definition class
  *
  * @Annotation
+ * @Annotation\Target("PROPERTY")
  * @codeCoverageIgnore
  */
 class Mogrify extends Annotation
 {
-    /** @var array */
+    /**
+     * Identfier of a pre-configured format or key-value pairs of IM parameters
+     *
+     * @Required
+     * @var string|array<string>
+     */
     public $params;
 }
