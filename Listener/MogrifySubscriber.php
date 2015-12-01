@@ -24,13 +24,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class MogrifySubscriber implements EventSubscriber
 {
-    private $config = array();
-
-    /**
-     * @var string
-     */
-    private $rootDir;
-
     /**
      * @var \Metadata\MetadataFactoryInterface
      */
@@ -47,13 +40,11 @@ class MogrifySubscriber implements EventSubscriber
     private $propertyAccessor;
 
     /**
-     * @param string                    $rootDir            The dir to generate files
      * @param MetadataFactoryInterface  $metadataFactory
      * @param ImManager                 $imManager          The ImBundle manager instance
      */
-    public function __construct($rootDir, MetadataFactoryInterface $metadataFactory, ImManager $imManager)
+    public function __construct(MetadataFactoryInterface $metadataFactory, ImManager $imManager)
     {
-        $this->rootDir = $rootDir;
         $this->metadataFactory = $metadataFactory;
         $this->imManager = $imManager;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();

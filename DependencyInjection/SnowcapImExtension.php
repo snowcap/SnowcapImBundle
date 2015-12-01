@@ -41,5 +41,15 @@ class SnowcapImExtension extends Extension
         $container->setParameter('snowcap_im.cache_path', $config['cache_path']);
         $container->setParameter('snowcap_im.timeout', $config['timeout']);
         $container->setParameter('snowcap_im.binary_path', $config['binary_path']);
+
+        $metadataCache = '%kernel.cache_dir%/snowcap_im';
+        $metadataCache = $container->getParameterBag()->resolveValue($metadataCache);
+        if (!is_dir($metadataCache)) {
+            mkdir($metadataCache, 0777, true);
+        }
+        $container
+            ->getDefinition('snowcap_im.metadata.cache')
+            ->replaceArgument(0, $metadataCache)
+        ;
     }
 }
