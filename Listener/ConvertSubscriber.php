@@ -17,12 +17,12 @@ use Snowcap\ImBundle\Manager as ImManager;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Snowcap\ImBundle\Doctrine\Metadata\MogrifyMetadata;
+use Snowcap\ImBundle\Doctrine\Metadata\ConvertMetadata;
 
 /**
- * Event listener for Doctrine entities to evualuate and execute Mogrify annotations
+ * Event listener for Doctrine entities to evualuate and execute Convert and ConvertMultiple annotations
  */
-class MogrifySubscriber implements EventSubscriber
+class ConvertSubscriber implements EventSubscriber
 {
     /**
      * @var \Metadata\MetadataFactoryInterface
@@ -60,23 +60,24 @@ class MogrifySubscriber implements EventSubscriber
         return array('prePersist', 'preFlush');
     }
 
+    private function recomputeChangeSet($event)
+    {
+        $object = $event->getEntity();
+
+        $em = $event->getEntityManager();
+        $uow = $em->getUnitOfWork();
+        $metadata = $em->getClassMetadata(get_class($object));
+        $uow->recomputeSingleEntityChangeSet($metadata, $object);
+
+        return $this;
+    }
+
     /**
      * @param PreFlushEventArgs $ea
      */
     public function preFlush(PreFlushEventArgs $ea)
     {
-        $unitOfWork = $ea->getEntityManager()->getUnitOfWork();
-        $entityMaps = $unitOfWork->getIdentityMap();
-
-        foreach ($entityMaps as $entities) {
-            foreach ($entities as $entity) {
-                foreach ($this->metadataFactory->getMetadataForClass(get_class($entity))->propertyMetadata as $propertyMetadata) {
-                    if($propertyMetadata instanceof MogrifyMetadata) {
-                        $this->mogrify($entity, $propertyMetadata);
-                    }
-                }
-            }
-        }
+        
     }
 
     /**
@@ -86,21 +87,26 @@ class MogrifySubscriber implements EventSubscriber
     {
         $entity = $ea->getEntity();
         foreach ($this->metadataFactory->getMetadataForClass(get_class($entity))->propertyMetadata as $propertyMetadata) {
-            if($propertyMetadata instanceof MogrifyMetadata) {
-                $this->mogrify($entity, $propertyMetadata);
+            if($propertyMetadata instanceof ConvertMetadata) {
+                $this->convert($entity, $propertyMetadata);
             }
         }
+        
     }
 
     /**
      * @param $entity
      * @param $propertyMetadata
      */
-    private function mogrify($entity, $propertyMetadata)
+    private function convert($entity, $propertyMetadata)
     {
         $file = $this->propertyAccessor->getValue($entity, $propertyMetadata->name);
         if ($file instanceof \SplFileInfo) {
-            $this->imManager->mogrify($propertyMetadata->params, $file->getPathName());
+            foreach ($propertyMetadata->getConverts() as $convert) {
+                // XXX: convert() only takes paths relative to web root, currently
+                $this->imManager->convert($convert->params, $file->getPathName());
+            }
         }
+        return null;
     }
 }

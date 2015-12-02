@@ -120,6 +120,8 @@ To resize the original not to be any wider than 1024 and create say a medium siz
 
     public $thumbnail;
 
+**Note: Convert operations are always executed before mogrify operations.** 
+
 Clearing the cache
 ------------------
 
