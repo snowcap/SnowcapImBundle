@@ -16,8 +16,8 @@ services:
         tags:
             -  { name: twig.extension }
 
-    snowcap_im.metadata.mogrify_driver:
-        class: Snowcap\ImBundle\Doctrine\Driver\MogrifyDriver
+    snowcap_im.metadata.annotation_driver:
+        class: Snowcap\ImBundle\Doctrine\Driver\AnnotationDriver
         public: false
         arguments: [@annotation_reader]
 
@@ -27,18 +27,24 @@ services:
         arguments:
             - {}
 
-    snowcap_im.metadata.mogrify_factory:
+    snowcap_im.metadata.annotation_factory:
         class: Metadata\MetadataFactory
         public: false
-        arguments: [@snowcap_im.metadata.mogrify_driver]
+        arguments: [@snowcap_im.metadata.annotation_driver]
         calls:
             - [setCache, ["@snowcap_im.metadata.cache"]]
 
     snowcap_im.mogrify_subscriber:
         class: Snowcap\ImBundle\Listener\MogrifySubscriber
-        arguments: [@snowcap_im.metadata.mogrify_factory, @snowcap_im.manager]
+        arguments: [@snowcap_im.metadata.annotation_factory, @snowcap_im.manager]
         tags:
             - { name: doctrine.event_subscriber, priority: 1 }
+
+    snowcap_im.convert_subscriber:
+        class: Snowcap\ImBundle\Listener\ConvertSubscriber
+        arguments: [@snowcap_im.metadata.annotation_factory, @snowcap_im.manager]
+        tags:
+            - { name: doctrine.event_subscriber, priority: 2 }
 
     snowcap_im.form_extension:
         class: Snowcap\ImBundle\Form\Extension\ImageTypeExtension
