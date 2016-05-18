@@ -8,18 +8,18 @@ services:
         arguments: ['\Symfony\Component\Process\Process', %snowcap_im.binary_path%, %snowcap_im.timeout%]
     snowcap_im.manager:
         class: %snowcap_im.manager_class%
-        arguments: [@snowcap_im.wrapper, %kernel.root_dir%, %snowcap_im.web_path%, %snowcap_im.cache_path%, %snowcap_im.formats%]
+        arguments: ['@snowcap_im.wrapper', %kernel.root_dir%, %snowcap_im.web_path%, %snowcap_im.cache_path%, %snowcap_im.formats%]
 
     snowcap_im.twig:
         class: Snowcap\ImBundle\Twig\Extension\ImExtension
-        arguments: [@snowcap_im.manager]
+        arguments: ['@snowcap_im.manager']
         tags:
             -  { name: twig.extension }
 
     snowcap_im.metadata.mogrify_driver:
         class: Snowcap\ImBundle\Doctrine\Driver\MogrifyDriver
         public: false
-        arguments: [@annotation_reader]
+        arguments: ['@annotation_reader']
 
     snowcap_im.metadata.cache:
         class: Metadata\Cache\FileCache
@@ -30,18 +30,18 @@ services:
     snowcap_im.metadata.mogrify_factory:
         class: Metadata\MetadataFactory
         public: false
-        arguments: [@snowcap_im.metadata.mogrify_driver]
+        arguments: ['@snowcap_im.metadata.mogrify_driver']
         calls:
             - [setCache, ["@snowcap_im.metadata.cache"]]
 
     snowcap_im.mogrify_subscriber:
         class: Snowcap\ImBundle\Listener\MogrifySubscriber
-        arguments: [@snowcap_im.metadata.mogrify_factory, @snowcap_im.manager]
+        arguments: ['@snowcap_im.metadata.mogrify_factory', '@snowcap_im.manager']
         tags:
             - { name: doctrine.event_subscriber, priority: 1 }
 
     snowcap_im.form_extension:
         class: Snowcap\ImBundle\Form\Extension\ImageTypeExtension
-        arguments: [@snowcap_im.manager]
+        arguments: ['@snowcap_im.manager']
         tags:
             -  { name: form.type_extension, alias: snowcap_core_image }
