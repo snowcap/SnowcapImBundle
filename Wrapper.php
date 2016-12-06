@@ -89,9 +89,9 @@ class Wrapper
         if ($outputfile !== "") {
             $this->checkDirectory($outputfile);
 
-            $commandString = $this->binaryPath . $command . " " . $inputfile . $attributesString . " " . $outputfile;
+            $commandString = $this->binaryPath . $command . ' "' . $inputfile . '"' . $attributesString . " " . $outputfile;
         } else {
-            $commandString = $this->binaryPath . $command . $attributesString . " " . $inputfile;
+            $commandString = $this->binaryPath . $command . $attributesString . ' "' . $inputfile . '"';
         }
 
         $this->validateCommand($commandString);
