@@ -44,4 +44,4 @@ services:
         class: Snowcap\ImBundle\Form\Extension\ImageTypeExtension
         arguments: ['@snowcap_im.manager']
         tags:
-            -  { name: form.type_extension, alias: snowcap_core_image }
+            -  { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
