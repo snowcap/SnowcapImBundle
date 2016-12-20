@@ -41,7 +41,7 @@ class ImageTypeExtension extends AbstractTypeExtension
      */
     public function getExtendedType()
     {
-        return 'snowcap_core_image';
+        return 'Symfony\Component\Form\Extension\Core\Type\FormType';
     }
 
     /**
