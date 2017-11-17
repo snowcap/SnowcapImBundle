@@ -4,11 +4,11 @@ parameters:
 
 services:
     snowcap_im.wrapper:
-        class: %snowcap_im.wrapper_class%
-        arguments: ['\Symfony\Component\Process\Process', %snowcap_im.binary_path%, %snowcap_im.timeout%]
+        class: '%snowcap_im.wrapper_class%'
+        arguments: ['\Symfony\Component\Process\Process', '%snowcap_im.binary_path%', '%snowcap_im.timeout%']
     snowcap_im.manager:
-        class: %snowcap_im.manager_class%
-        arguments: ['@snowcap_im.wrapper', %kernel.root_dir%, %snowcap_im.web_path%, %snowcap_im.cache_path%, %snowcap_im.formats%]
+        class: '%snowcap_im.manager_class%'
+        arguments: ['@snowcap_im.wrapper', '%kernel.root_dir%', '%snowcap_im.web_path%', '%snowcap_im.cache_path%', '%snowcap_im.formats%']
 
     snowcap_im.twig:
         class: Snowcap\ImBundle\Twig\Extension\ImExtension
